@@ -44,7 +44,7 @@ Download and search manga right from the terminal!
    An easy-to-use cli tool for downloading manga 
   <br>
   <br>
-<img src="https://i.imgur.com/Vm9gENO.png" alt="example" width="800">
+<img src="https://i.imgur.com/xaB6Qne.mp4" alt="example" width="800">
 </p>
 
 ### Built With
