@@ -8,7 +8,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/Gyro7/">
-    <img src="assets/mangodl.png" alt="Logo" width="467">
+    <img src="assets/logo.png" alt="Logo" width="467">
   </a>
 </p>
 <h1 align="center">mangodl</h1>
