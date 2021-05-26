@@ -8,17 +8,17 @@
 <br />
 <p align="center">
   <a href="https://github.com/Gyro7/">
-    <img src="_assets/mangodl.png">
+    <img src="assets/mangodl.png" alt="Logo" width="467">
   </a>
 </p>
-<h3 align="center">GoFetch</h3>
+<h1 align="center">mangodl</h1>
 
   <p align="center">
-    Show off your Go information with this cool command-line tool!
+Download and search manga right from the terminal!
     <br />
     <br />
-    <a href="https://github.com/Gyro7/gofetch/issues">Report Bug</a> || 
-    <a href="https://github.com/Gyro7/gofetch/pulls">Request Feature</a>
+    <a href="https://github.com/Gyro7/mangodl/issues">Report Bug</a> || 
+    <a href="https://github.com/Gyro7/mangodl/pulls">Request Feature</a>
   </p>
 
 <!-- TABLE OF CONTENTS -->
@@ -40,7 +40,8 @@
 ## About The Project
 
 <br>
-<p align="center">A pretty command-line "Go and System information" tool written in Go
+<p align="center">
+   An easy-to-use cli tool for downloading manga 
   <br>
   <br>
 <img src="https://i.imgur.com/Vm9gENO.png" alt="example" width="800">
@@ -49,6 +50,7 @@
 ### Built With
 
 -   [Go](https://golang.org)
+-   [Goquery](https://github.com/PuerkitoBio/goquery)
 
 <!-- GETTING STARTED -->
 
@@ -58,25 +60,35 @@ To get a local copy up and running follow these simple steps.
 
 ### Prerequisites
 
--   golang
--   linux, android (Termux) or windows (not available for mac at the moment)
+-   golang (if you want to build from source)
+-   linux, windows or mac
 
 ### Installation
 
 #### Linux
 ```sh
-# clone and go into repo
-git clone https://github.com/Gyro7/gofetch.git
-cd gofetch/
-# install
-sudo install -m755 gofetch /usr/bin/gofetch
-# go back and remove the download
-cd ..
-rm -rf gofetch/
-# run
-gofetch
+# clone and go into the repository
+git clone https://github.com/Gyro7/mangodl.git
+cd mangodl
+
+# run the installation script
+chmod +x install.sh
+./install.sh
+```
+
+#### Linux (build from source)
+```sh
+# clone and go into the repository
+git clone https://github.com/Gyro7/mangodl.git
+cd mangodl
+
+# NOW JUST OPEN THE INSTALL.SH SCRIPT AND UNCOMMENT THE COMMENTED LINES
+# then run the installation script
+chmod +x install.sh
+./install.sh
 ```
 #### Windows
+If you just want to use it without installing it, just run mangodl.exe everytime and skip this steps below
 ```sh
 Open start menu,
 1. Type Edit environment variables
@@ -85,36 +97,22 @@ Open start menu,
 4. There you see two boxes, in System Variables box find path variable
 5. Click Edit
 6. a window pops up, click New
-7. Type the Directory path of gofetch.exe (Directory means exclude the file name from path)
+7. Type the Directory path of mangodl.exe (Directory means exclude the file name from path)
 8. Click Ok on all open windows and restart the command prompt.
-```
-#### Android
-The only way to use gofetch for android if not having root access is building from source.  
-If you have root access just follow the [Linux Installation](#linux)
-```sh
-# clone and go into repo
-git clone https://github.com/Gyro7/gofetch.git
-cd gofetch/
-# remove the linux executable
-rm gofetch
-# build
-go build
-# run
-./gofetch
 ```
 ## Usage
 
 If you followed the previous steps, you just have to run the program with
-
 ```sh
-gofetch # start the main program
+mangodl # start the main program
 ```
+For help, just run `mangodl -h`
 
 <!-- ROADMAP -->
 
 ## Roadmap
 
-See the [open issues](https://github.com/Gyro7/gofetch/issues) for a list of proposed features (and known issues).
+See the [open issues](https://github.com/Gyro7/mangodl/issues) for a list of proposed features (and known issues).
 
 <!-- CONTRIBUTING -->
 
@@ -139,7 +137,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 ## Contact
 
 gyro - [gyro@sach1.tk](mailto:gyro@sach1.tk)
-Project Link: [https://github.com/Gyro7/gofetch](https://github.com/Gyro7/gofetch)
+Project Link: [https://github.com/Gyro7/mangodl](https://github.com/Gyro7/gofetch)
 
 <!-- ACKNOWLEDGEMENTS -->
 
@@ -150,14 +148,14 @@ Project Link: [https://github.com/Gyro7/gofetch](https://github.com/Gyro7/gofetc
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
-[contributors-shield]: https://img.shields.io/github/contributors/Gyro7/gofetch.svg?style=flat-square
-[contributors-url]: https://github.com/Gyro7/gofetch/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/Gyro7/gofetch.svg?style=flat-square
-[forks-url]: https://github.com/Gyro7/gofetch/network/members
-[stars-shield]: https://img.shields.io/github/stars/Gyro7/gofetch.svg?style=flat-square
-[stars-url]: https://github.com/Gyro7/gofetch/stargazers
-[issues-shield]: https://img.shields.io/github/issues/Gyro7/gofetch.svg?style=flat-square
-[issues-url]: https://github.com/Gyro7/gofetch/issues
-[license-shield]: https://img.shields.io/github/license/Gyro7/gofetch.svg?style=flat-square
-[license-url]: https://github.com/Gyro7/gofetch/blob/master/LICENSE
+[contributors-shield]: https://img.shields.io/github/contributors/Gyro7/mangodl.svg?style=flat-square
+[contributors-url]: https://github.com/Gyro7/mangodl/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/Gyro7/mangodl.svg?style=flat-square
+[forks-url]: https://github.com/Gyro7/mangodl/network/members
+[stars-shield]: https://img.shields.io/github/stars/Gyro7/mangodl.svg?style=flat-square
+[stars-url]: https://github.com/Gyro7/mangodl/stargazers
+[issues-shield]: https://img.shields.io/github/issues/Gyro7/mangodl.svg?style=flat-square
+[issues-url]: https://github.com/Gyro7/mangodl/issues
+[license-shield]: https://img.shields.io/github/license/Gyro7/mangodl.svg?style=flat-square
+[license-url]: https://github.com/Gyro7/mangodl/blob/master/LICENSE
 
