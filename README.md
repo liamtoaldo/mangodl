@@ -8,7 +8,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/Gyro7/">
-    <img src="assets/logo.png" alt="Logo" width="300">
+    <img src="assets/logo.png" alt="Logo" width="200">
   </a>
 </p>
 <h1 align="center">mangodl</h1>
@@ -50,7 +50,7 @@ Download and search manga right from the terminal!
    An easy-to-use cli tool for downloading manga 
   <br>
   <br>
-<img src="https://s3.gifyu.com/images/monkus.gif" alt="example" width="800">
+<img src="assets/example.gif" alt="example" width="800">
 </p>
 
 ### Built With
@@ -98,7 +98,7 @@ An AUR package should be available as soon as possible.
 
 If it's available, then just `yay -S mangodl`
 #### Windows
-If you just want to use it without installing it, just run mangodl.exe everytime and skip this steps below
+If you just want to use it without installing it, just run mangodl.exe everytime and skip these steps below
 ```sh
 Open start menu,
 1. Type Edit environment variables
