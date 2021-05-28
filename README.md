@@ -94,9 +94,9 @@ chmod +x install.sh
 ./install.sh
 ```
 #### Arch Linux and derivatives
-An AUR package should be available as soon as possible.
+An AUR package is now available.
 
-If it's available, then just `yay -S mangodl`
+Just `yay -S mangodl` or, if you use paru `paru -S mangodl`
 #### Windows
 If you just want to use it without installing it, just run mangodl.exe everytime and skip these steps below
 ```sh
@@ -119,7 +119,9 @@ Anyway, this is not tested, so if you have macOS and want to test/fix just creat
 # clone and go into the repository
 git clone https://github.com/Gyro7/mangodl.git
 cd mangodl
-
+# remove the linux executable and rename the macos one to mangodl
+rm mangodl
+mv mangodl-darwin mangodl
 # run the installation script
 chmod +x install.sh
 ./install.sh
