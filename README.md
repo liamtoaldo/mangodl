@@ -203,5 +203,5 @@ Project Link: [https://github.com/Gyro7/mangodl](https://github.com/Gyro7/gofetc
 [issues-shield]: https://img.shields.io/github/issues/Gyro7/mangodl.svg?style=flat-square
 [issues-url]: https://github.com/Gyro7/mangodl/issues
 [license-shield]: https://img.shields.io/github/license/Gyro7/mangodl.svg?style=flat-square
-[license-url]: https://github.com/Gyro7/mangodl/blob/master/LICENSE
+[license-url]: https://github.com/Gyro7/mangodl/blob/main/LICENSE
 
