@@ -143,9 +143,9 @@ Arguments and flags:
 	-n, --noplot		        do not print the plot of searched manga	
 <!-- ROADMAP -->
 
-##Reading
+## Reading
 To read the downloaded pages, I really suggest this free piece of software, which is lightweight and flexible:
-###<u>[OpenComic](https://github.com/ollm/OpenComic) </u>
+### <u>[OpenComic](https://github.com/ollm/OpenComic) </u>
 <img src="assets/opencomic.png" alt="OpenComic Demonstration" width="800">
 
 You can simply add the folder "Downloaded Manga" to OpenComic, which is the most recommended thing to do.
