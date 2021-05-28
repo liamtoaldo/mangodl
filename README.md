@@ -30,7 +30,13 @@ Download and search manga right from the terminal!
 -   [Getting Started](#getting-started)
     -   [Prerequisites](#prerequisites)
     -   [Installation](#installation)
+        -   [Linux](#linux)
+        -   [Linux (Build from Source)](#linux-build-from-source)
+        -   [Arch Linux and derivatives](#arch-linux-and-derivatives)
+        -   [Windows](#windows)
+        -   [macOS](#macos)
 -   [Usage](#usage)
+-   [Reading](#reading)
 -   [Roadmap](#roadmap)
 -   [Contributing](#contributing)
 -   [License](#license)
@@ -44,7 +50,7 @@ Download and search manga right from the terminal!
    An easy-to-use cli tool for downloading manga 
   <br>
   <br>
-<img src="https://i.imgur.com/xaB6Qne.mp4" alt="example" width="800">
+<img src="https://s3.gifyu.com/images/monkus.gif" alt="example" width="800">
 </p>
 
 ### Built With
@@ -87,6 +93,10 @@ cd mangodl
 chmod +x install.sh
 ./install.sh
 ```
+####Arch Linux and derivatives
+An AUR package should be available as soon as possible.
+
+If it's available, then just `yay -S mangodl`
 #### Windows
 If you just want to use it without installing it, just run mangodl.exe everytime and skip this steps below
 ```sh
@@ -100,16 +110,47 @@ Open start menu,
 7. Type the Directory path of mangodl.exe (Directory means exclude the file name from path)
 8. Click Ok on all open windows and restart the command prompt.
 ```
-## Usage
 
-If you followed the previous steps, you just have to run the program with
+#### macOS
+If you haven't already given the terminal access to the disk, then do it, for further help see <b>[THIS](https://osxdaily.com/2018/10/09/fix-operation-not-permitted-terminal-error-macos/) </b>
 ```sh
-mangodl # start the main program
-```
-For help, just run `mangodl -h`
+# clone and go into the repository
+git clone https://github.com/Gyro7/mangodl.git
+cd mangodl
 
+# run the installation script
+chmod +x install.sh
+./install.sh
+```
+## Usage
+Usage: mangodl [FLAGS]...
+
+Arguments and flags:
+
+	-h, --help			shows this message and exit
+
+	Needed (one of them):
+	-D, --download			downloads the manga specified after -D (e.g. mangodl -D jojo will search for 5 manga with that name and ask you which one to download)
+	-S, --search			searches for the manga specified after this flag (e.g. mangodl -S "kanojo x kanojo" will search and display the manga found with that name)
+	-Q, --query			show downloaded manga
+	
+	Optional:
+	For -D:
+	-c, --chapter			used to specify the chapter to download (if omitted it will download them all)
+	-cr, --chapterrange		used to specify a range of chapters to download (e.g. mangodl -S -M "Martial Peak" -cr 1 99 will download chapters from 1 to 99 (included)
+	
+	For -S:
+	-n, --noplot		        do not print the plot of searched manga	
 <!-- ROADMAP -->
 
+##Reading
+To read the downloaded pages, I really suggest this free piece of software, which is lightweight and flexible:
+###<u>[OpenComic](https://github.com/ollm/OpenComic) </u>
+<img src="assets/opencomic.png" alt="OpenComic Demonstration" width="800">
+
+You can simply add the folder "Downloaded Manga" to OpenComic, which is the most recommended thing to do.
+<br>
+And then it'll open all your manga, divided into chapters.
 ## Roadmap
 
 See the [open issues](https://github.com/Gyro7/mangodl/issues) for a list of proposed features (and known issues).
@@ -130,13 +171,14 @@ Contributions are what make the open source community such an amazing place to b
 
 ## License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+Distributed under the GPL 3.0 License. See `LICENSE` for more information.
 
 <!-- CONTACT -->
 
 ## Contact
 
-gyro - [gyro@sach1.tk](mailto:gyro@sach1.tk)
+Me - [gyro@sach1.tk](mailto:gyro@sach1.tk)
+
 Project Link: [https://github.com/Gyro7/mangodl](https://github.com/Gyro7/gofetch)
 
 <!-- ACKNOWLEDGEMENTS -->
