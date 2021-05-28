@@ -93,7 +93,7 @@ cd mangodl
 chmod +x install.sh
 ./install.sh
 ```
-####Arch Linux and derivatives
+#### Arch Linux and derivatives
 An AUR package should be available as soon as possible.
 
 If it's available, then just `yay -S mangodl`
