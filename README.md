@@ -113,6 +113,8 @@ Open start menu,
 
 #### macOS
 If you haven't already given the terminal access to the disk, then do it, for further help see <b>[THIS](https://osxdaily.com/2018/10/09/fix-operation-not-permitted-terminal-error-macos/) </b>
+
+Anyway, this is not tested, so if you have macOS and want to test/fix just create a pull request or an issue.
 ```sh
 # clone and go into the repository
 git clone https://github.com/Gyro7/mangodl.git
