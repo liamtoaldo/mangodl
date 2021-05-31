@@ -132,11 +132,11 @@ Usage: mangodl [FLAGS]...
 Arguments and flags:
 
 	-h, --help			shows this message and exit
-
 	Needed (one of them):
 	-D, --download			downloads the manga specified after -D (e.g. mangodl -D jojo will search for 5 manga with that name and ask you which one to download)
 	-S, --search			searches for the manga specified after this flag (e.g. mangodl -S "kanojo x kanojo" will search and display the manga found with that name)
 	-Q, --query			show downloaded manga
+	-Dir, --directory		sets the default directory to download manga (e.g. mangodl -Dir "~/Documents/manga/"), otherwise the default one would be "~/Downloaded Manga/" and the Desktop for Windows
 	
 	Optional:
 	For -D:
@@ -144,7 +144,7 @@ Arguments and flags:
 	-cr, --chapterrange		used to specify a range of chapters to download (e.g. mangodl -S -M "Martial Peak" -cr 1 99 will download chapters from 1 to 99 (included)
 	
 	For -S:
-	-n, --noplot		        do not print the plot of searched manga	
+	-n, --noplot		do not print the plot of searched manga	
 <!-- ROADMAP -->
 
 ## Reading
