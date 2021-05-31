@@ -8,7 +8,6 @@ import (
 	dl "mangodl/download"
 	"net/http"
 	"os"
-	"runtime"
 	"strconv"
 	"strings"
 )
@@ -22,6 +21,8 @@ const (
 	SEARCHFLAGALT       = "--search"
 	QUERYFLAG           = "-Q"
 	QUERYFLAGALT        = "--query"
+	DIRECTORYFLAG       = "-Dir"
+	DIRECTORYFLAGALT    = "--directory"
 	CHAPTERFLAG         = "-c"
 	CHAPTERFLAGALT      = "--chapter"
 	CHAPTERRANGEFLAG    = "-cr"
@@ -35,9 +36,10 @@ var (
 	mangaName       string
 	selectedMangaID string
 	realMangaName   string
-	currentState    byte //D for downloading, S for searching, Q for querying, H for help and E for error
+	currentState    byte //D for downloading, S for searching, Q for querying, H for help, E for error, F for directory/folder
 	foundMangaIDs   []string
 	foundMangaNames []string
+	chosenDirectory string
 
 	//optional
 	chapterState  string //single or multiple or all
@@ -53,7 +55,6 @@ type DownloadedManga struct {
 }
 
 func showHelp() {
-	//TODO add option to choose directory (the default one is "~/Downloaded Manga"
 	fmt.Println(`Usage: mangodl [FLAGS]...
 Download manga using the terminal. The manga list is really big.
 
@@ -65,6 +66,7 @@ Arguments and flags:
 	-D, --download			downloads the manga specified after -D (e.g. mangodl -D jojo will search for 5 manga with that name and ask you which one to download)
 	-S, --search			searches for the manga specified after this flag (e.g. mangodl -S "kanojo x kanojo" will search and display the manga found with that name)
 	-Q, --query			show downloaded manga
+	-Dir, --directory		sets the default directory to download manga (e.g. mangodl -Dir "~/Documents/manga/"), otherwise the default one would be "~/Downloaded Manga/" and the Desktop for Windows
 	
 	Optional:
 	For -D:
@@ -128,6 +130,12 @@ func checkArgs() {
 		//Query
 		if s == QUERYFLAG || s == QUERYFLAGALT {
 			currentState = 'Q'
+			break
+		}
+		//Directory selection
+		if s == DIRECTORYFLAG || s == DIRECTORYFLAGALT {
+			currentState = 'F'
+			chosenDirectory = os.Args[i+1]
 			break
 		}
 
@@ -285,15 +293,8 @@ func download(chapter int) bool {
 		log.Println("Unable to connect to website, error: ", err)
 	}
 	doc, _ := goquery.NewDocumentFromReader(res.Body)
-	var home string
-	//if it's windows, then redirect the downloaded manga to the Desktop, for better usability
-	if runtime.GOOS == "windows" {
-		home, _ = os.UserHomeDir()
-		home += "/Desktop"
-	} else {
-		home, _ = os.UserHomeDir()
-	}
-	dir := home + "/Downloaded Manga/" + realMangaName + "/Chapter " + fmt.Sprint(chapter)
+
+	dir := ReadJSON() + realMangaName + "/Chapter " + fmt.Sprint(chapter)
 	err = os.MkdirAll(dir, 0777)
 	if err != nil {
 		log.Println(err)
@@ -320,15 +321,7 @@ func download(chapter int) bool {
 //the function used for --query (shows the downloaded manga)
 func showDownloaded() {
 	var downloaded []DownloadedManga
-	var home string
-	//if it's windows, then redirect the downloaded manga to the Desktop, for better usability
-	if runtime.GOOS == "windows" {
-		home, _ = os.UserHomeDir()
-		home += "/Desktop"
-	} else {
-		home, _ = os.UserHomeDir()
-	}
-	dir := home + "/Downloaded Manga/"
+	dir := ReadJSON()
 	files, err := ioutil.ReadDir(dir)
 
 	if err != nil {
@@ -348,7 +341,7 @@ func showDownloaded() {
 					downloaded[len(downloaded)-1].chapters += strings.Split(f.Name(), " ")[1] + " "
 				}
 			}
-			dir = home + "/Downloaded Manga/"
+			dir = ReadJSON()
 		}
 	}
 	for _, m := range downloaded {
@@ -358,6 +351,8 @@ func showDownloaded() {
 
 //Execute is equivalent to a "main" since it does everything required to run and calls all other private functions
 func Execute() {
+	//put the default config file, which, for now, contains only the directory
+	defaultJson()
 	//Check if arguments are inputted correctly and change "states"
 	checkArgs()
 
@@ -384,6 +379,8 @@ func Execute() {
 		}
 	} else if currentState == 'Q' {
 		showDownloaded()
+	} else if currentState == 'F' {
+		WriteJson(chosenDirectory)
 	} else if currentState == 'S' {
 		search(10)
 	} else if currentState == 'H' {
