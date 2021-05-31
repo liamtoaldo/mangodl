@@ -2,6 +2,7 @@ package utils
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -42,6 +43,7 @@ func WriteJson(data string) {
 	if err != nil {
 		log.Println(err)
 	}
+	fmt.Println("Set default directory to", config.Directory)
 }
 func defaultJson() {
 	check()
