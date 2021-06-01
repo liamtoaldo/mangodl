@@ -122,9 +122,8 @@ cd mangodl
 # remove the linux executable and rename the macos one to mangodl
 rm mangodl
 mv mangodl-darwin mangodl
-# run the installation script
-chmod +x install.sh
-./install.sh
+# move the executable to the /usr/local/bin/ path, be aware of not deleting the directory!
+sudo mv mangodl /usr/local/bin/mangodl
 ```
 ## Usage
 Usage: mangodl [FLAGS]...
