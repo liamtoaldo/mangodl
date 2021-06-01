@@ -119,9 +119,10 @@ Anyway, this is not tested, so if you have macOS and want to test/fix just creat
 # clone and go into the repository
 git clone https://github.com/Gyro7/mangodl.git
 cd mangodl
-# remove the linux executable and rename the macos one to mangodl
+# remove the linux executable, rename the macos one to mangodl and make it executable
 rm mangodl
 mv mangodl-darwin mangodl
+chmod +x mangodl
 # move the executable to the /usr/local/bin/ path, be aware of not deleting the directory!
 sudo mv mangodl /usr/local/bin/mangodl
 ```
