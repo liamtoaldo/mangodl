@@ -50,14 +50,14 @@ func defaultJson() {
 	configData, err := ioutil.ReadFile(configFile)
 	var config Config
 	json.Unmarshal(configData, &config)
-	if config.Directory != home+"/Downloaded Manga" && config.Directory != "" {
+	if config.Directory != home+"/Downloaded Manga/" && config.Directory != "" {
 		return
 	}
 	//if it's windows, then redirect the downloaded manga to the Desktop, for better usability
 	if runtime.GOOS == "windows" {
-		config.Directory = home + "/Desktop/Downloaded Manga"
+		config.Directory = home + "/Desktop/Downloaded Manga/"
 	} else {
-		config.Directory = home + "/Downloaded Manga"
+		config.Directory = home + "/Downloaded Manga/"
 	}
 	//write to the config struct and then write the struct to the file
 	newData, _ := json.MarshalIndent(config, "", "	")
