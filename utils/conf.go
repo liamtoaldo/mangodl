@@ -10,13 +10,16 @@ import (
 )
 
 var home, _ = os.UserHomeDir()
-var configFile = home + "/mangodl.conf"
+var configFile = home + "/.config/mangodl.conf"
 
 type Config struct {
 	Directory string `json:"directory"`
 }
 
 func check() {
+	if runtime.GOOS == "windows" {
+		configFile = home + "/mangodl.conf"
+	}
 	_, err := os.Stat(configFile)
 	if os.IsNotExist(err) {
 		os.Create(configFile)

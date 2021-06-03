@@ -285,7 +285,7 @@ func chooseManga() {
 }
 
 //download the chosen manga
-func download(chapter int) bool {
+func download(chapter float32) bool {
 
 	URL := fmt.Sprintf("https://ww.mangakakalot.tv/chapter/%s/chapter_%v", selectedMangaID, chapter)
 	res, err := http.Get(URL)
@@ -363,19 +363,19 @@ func Execute() {
 			i := 0
 			for {
 				i++
-				if !download(i) {
+				if !download(float32(i)) {
 					break
 				}
 			}
 		} else if chapterState == "multiple" {
 			for i := chapterBegin; i <= chapterEnd; i++ {
-				if !download(i) {
+				if !download(float32(i)) {
 					break
 				}
 			}
 		} else if chapterState == "single" {
-			tmp, _ := strconv.Atoi(singleChapter)
-			download(tmp)
+			tmp, _ := strconv.ParseFloat(singleChapter, 32)
+			download(float32(tmp))
 		}
 	} else if currentState == 'Q' {
 		showDownloaded()
