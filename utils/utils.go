@@ -326,6 +326,7 @@ func showDownloaded() {
 
 	if err != nil {
 		fmt.Println("You don't have any manga downloaded or they couldn't be recognised")
+		log.Println(err)
 	}
 
 	for _, f := range files {
