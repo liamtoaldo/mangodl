@@ -49,8 +49,8 @@ var (
 	singleChapter string
 	chapterBegin  string
 	chapterEnd    string
-	plotState     string //no or yes
-	output        string //img or pdf
+	plotState     string  //no or yes
+	output        = "img" //img or pdf, default is image
 )
 
 type DownloadedManga struct {
@@ -182,8 +182,6 @@ func checkArgs() {
 				return
 			}
 			output = os.Args[i+1]
-		} else {
-			plotState = "img"
 		}
 	}
 }
