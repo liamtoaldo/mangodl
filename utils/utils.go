@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	dl "mangodl/download"
+	"mangodl/pdf"
 	"net/http"
 	"os"
 	"strconv"
@@ -29,6 +30,8 @@ const (
 	CHAPTERRANGEFLAGALT = "--chapterrange"
 	NOPLOTFLAG          = "-n"
 	NOPLOTFLAGALT       = "--noplot"
+	OUTPUTFLAG          = "-o"
+	OUTPUTFLAGALT       = "--output"
 )
 
 //the variables based on the user's results
@@ -44,9 +47,10 @@ var (
 	//optional
 	chapterState  string //single or multiple or all
 	singleChapter string
-	chapterBegin  int
-	chapterEnd    int
+	chapterBegin  string
+	chapterEnd    string
 	plotState     string //no or yes
+	output        string //img or pdf
 )
 
 type DownloadedManga struct {
@@ -66,12 +70,13 @@ Arguments and flags:
 	-D, --download			downloads the manga specified after -D (e.g. mangodl -D jojo will search for 5 manga with that name and ask you which one to download)
 	-S, --search			searches for the manga specified after this flag (e.g. mangodl -S "kanojo x kanojo" will search and display the manga found with that name)
 	-Q, --query			show downloaded manga
-	-Dir, --directory		sets the default directory to download manga (e.g. mangodl -Dir "~/Documents/manga/"), otherwise the default one would be "~/Downloaded Manga/" and the Desktop for Windows
+	-Dir, --directory		sets the default directory to download manga (e.g. mangodl -Dir "$HOME/Documents/manga/"), otherwise the default one would be "~/Downloaded Manga/" and the Desktop for Windows
 	
 	Optional:
 	For -D:
 	-c, --chapter			used to specify the chapter to download (if omitted it will download them all)
-	-cr, --chapterrange		used to specify a range of chapters to download (e.g. mangodl -S -M "Martial Peak" -cr 1 99 will download chapters from 1 to 99 (included)
+	-cr, --chapterrange		used to specify a range of chapters to download (e.g. mangodl -D "Martial Peak" -cr 1 99 will download chapters from 1 to 99 (included)
+	-o, --output			used to specify the file output of the pages (img or pdf), e.g. mangodl -D "Tokyo Revengers" -o pdf will create a pdf for every chapter. By default, it's images 
 	
 	For -S:
 	-n, --noplot		do not print the plot of searched manga	
@@ -112,7 +117,7 @@ func checkArgs() {
 			}
 			currentState = 'D'
 			mangaName = os.Args[i+1]
-			fmt.Println("Attempting to download the first manga result with that name, for better results, first use -S and search")
+			fmt.Println("Attempting to download a manga with that name, for better results, first use -S and search")
 			continue
 		}
 		//Search for existing manga
@@ -157,8 +162,8 @@ func checkArgs() {
 				return
 			}
 			chapterState = "multiple"
-			chapterBegin, _ = strconv.Atoi(os.Args[i+1])
-			chapterEnd, _ = strconv.Atoi(os.Args[i+2])
+			chapterBegin = os.Args[i+1]
+			chapterEnd = os.Args[i+2]
 			break
 		} else {
 			chapterState = "all"
@@ -169,6 +174,16 @@ func checkArgs() {
 			plotState = "no"
 		} else {
 			plotState = "yes"
+		}
+		if s == OUTPUTFLAG || s == OUTPUTFLAGALT {
+			if !isNextArg(i + 1) {
+				currentState = 'E'
+				fmt.Println("You should specify the output (img or pdf)")
+				return
+			}
+			output = os.Args[i+1]
+		} else {
+			plotState = "img"
 		}
 	}
 }
@@ -282,6 +297,9 @@ func chooseManga() {
 		selectedMangaID = foundMangaIDs[4]
 		realMangaName = foundMangaNames[4]
 	}
+	if output == "pdf" {
+		fmt.Println("Starting to download images to be converted...")
+	}
 }
 
 //download the chosen manga
@@ -302,7 +320,10 @@ func download(chapter float32) bool {
 	selection := doc.Find("p")
 	if strings.Contains(selection.Text(), "The server") {
 		//if the chapter doesn't exist, delete the just created directory
-		os.Remove(dir)
+		err := os.Remove(dir)
+		if err != nil {
+			log.Println(err)
+		}
 		return false
 	}
 
@@ -311,7 +332,7 @@ func download(chapter float32) bool {
 		fileName := fmt.Sprintf("%s/page%v.jpg", dir, i)
 
 		err = dl.DownloadFile(imageURL, fileName)
-		if err == nil {
+		if err == nil && output != "pdf" {
 			fmt.Println("downloading ::", fmt.Sprintf("%s/page%v.jpg", dir, i))
 		}
 	})
@@ -350,6 +371,36 @@ func showDownloaded() {
 	}
 }
 
+//this function checks if the output was redirected to pdf, and if it is, it takes care of it
+func preparePDF(i float64) {
+
+	if output == "pdf" {
+		dir := ReadJSON() + realMangaName + "/Chapter " + fmt.Sprint(i)
+		pageNumber := pdf.GetNumberOfPages(dir)
+		var pages []string
+		for j := 1; j <= pageNumber; j++ {
+			pages = append(pages, fmt.Sprintf("%s/page%v.jpg", dir, j))
+		}
+		fmt.Println("Converting the downloaded images to PDF in", fmt.Sprintf("%s/Chapter%v.pdf", dir, i))
+		pdf.ConvertToPDF(pages, fmt.Sprintf("%s/Chapter%v.pdf", dir, i))
+		deleteImages(fmt.Sprintf(dir))
+	}
+}
+
+func deleteImages(path string) {
+	fmt.Println("Removing previously downloaded images of this chapter...")
+	files, _ := ioutil.ReadDir(path)
+	for _, file := range files {
+		if strings.Contains(file.Name(), "jpg") {
+			err := os.Remove(path + "/" + file.Name())
+			if err != nil {
+				log.Println(err)
+			}
+		}
+	}
+	fmt.Println("Done")
+}
+
 //Execute is equivalent to a "main" since it does everything required to run and calls all other private functions
 func Execute() {
 	//put the default config file, which, for now, contains only the directory
@@ -367,16 +418,20 @@ func Execute() {
 				if !download(float32(i)) {
 					break
 				}
+				preparePDF(float64(i))
 			}
 		} else if chapterState == "multiple" {
-			for i := chapterBegin; i <= chapterEnd; i++ {
+			tmp, _ := strconv.ParseFloat(chapterEnd, 32)
+			for i, _ := strconv.ParseFloat(chapterBegin, 32); i <= tmp; i++ {
 				if !download(float32(i)) {
 					break
 				}
+				preparePDF(i)
 			}
 		} else if chapterState == "single" {
 			tmp, _ := strconv.ParseFloat(singleChapter, 32)
 			download(float32(tmp))
+			preparePDF(tmp)
 		}
 	} else if currentState == 'Q' {
 		showDownloaded()
