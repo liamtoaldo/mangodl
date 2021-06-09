@@ -7,8 +7,10 @@ import (
 	"log"
 	dl "mangodl/download"
 	"mangodl/pdf"
+	"math"
 	"net/http"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -55,7 +57,7 @@ var (
 
 type DownloadedManga struct {
 	title    string
-	chapters string
+	chapters []float64
 }
 
 func showHelp() {
@@ -352,19 +354,25 @@ func showDownloaded() {
 		if f.IsDir() {
 			downloaded = append(downloaded, DownloadedManga{
 				title:    f.Name(),
-				chapters: "",
+				chapters: make([]float64, 0),
 			})
 			dir += f.Name()
 			files, err = ioutil.ReadDir(dir)
 			for _, f := range files {
 				if f.IsDir() {
-					downloaded[len(downloaded)-1].chapters += strings.Split(f.Name(), " ")[1] + " "
+					tmp, err := strconv.ParseFloat(strings.Split(f.Name(), " ")[1], 32)
+					if err != nil {
+						log.Println(err)
+					}
+					downloaded[len(downloaded)-1].chapters = append(downloaded[len(downloaded)-1].chapters, math.Ceil(tmp*100)/100) //rounding the number to the first decimal digit because some chapters have decimals
 				}
 			}
 			dir = ReadJSON()
 		}
 	}
 	for _, m := range downloaded {
+		//sort the chapters, so that they get displayed correctly ( 1 2 3 ) instead of ( 1 10 11 2 23 3 4 ...)
+		sort.Float64s(m.chapters)
 		fmt.Println(m.title, "- Chapters:", m.chapters)
 	}
 }
