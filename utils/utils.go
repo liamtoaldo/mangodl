@@ -202,7 +202,7 @@ func search(howMany int) {
 	doc, _ := goquery.NewDocumentFromReader(res.Body)
 	fmt.Println("Found: ")
 
-	counter := 1 //the variable that counts the number of manga listed
+	counter := 1 //the variable that counts the number of manga listed in the search
 
 	doc.Find("a").EachWithBreak(func(i int, selection *goquery.Selection) bool {
 		selectedMangaID, _ = selection.Attr("href")
