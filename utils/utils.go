@@ -13,6 +13,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 )
 
 const (
@@ -45,6 +46,7 @@ var (
 	foundMangaIDs   []string
 	foundMangaNames []string
 	chosenDirectory string
+	alreadyChecked	= false
 
 	//optional
 	chapterState  string //single or multiple or all
@@ -206,7 +208,7 @@ func search(howMany int) {
 		selectedMangaID, _ = selection.Attr("href")
 		//5 is the default for the downloads
 		if howMany == 5 {
-			if strings.Contains(selectedMangaID, "/manga/") && (i == 60 || i == 64 || i == 68 || i == 72 || i == 76) {
+			if strings.Contains(selectedMangaID, "/manga/") && (i == 60 || i == 64 || i == 68 ||i == 72 || i == 76 || i == 80) {
 				selectedMangaID = strings.Split(selectedMangaID, "/")[2]
 				foundMangaIDs = append(foundMangaIDs, selectedMangaID)
 
@@ -228,13 +230,13 @@ func search(howMany int) {
 						fmt.Println()
 					}
 				})
-
+				//added wait option because the host has become slow, and requests to it need to be slow as well
+				time.Sleep(500*time.Millisecond)
 				return true
 			}
 
 		} else { //10 is the default for the search
-			if strings.Contains(selectedMangaID, "/manga/") && (i == 60 || i == 64 || i == 68 || i == 72 || i == 76 || i == 80 || i == 84 || i == 88 || i == 92 || i == 96) {
-				//fmt.Println(selectedMangaID)
+			if strings.Contains(selectedMangaID, "/manga/") && (i == 60 || i == 64 || i == 68 || i == 72 || i == 76 || i == 80 || i == 84 || i == 88 || i == 92 || i == 96 || i == 100) {
 				selectedMangaID = strings.Split(selectedMangaID, "/")[2]
 				foundMangaIDs = append(foundMangaIDs, selectedMangaID)
 
@@ -245,7 +247,10 @@ func search(howMany int) {
 				if err != nil {
 					log.Println("Unable to connect to website, error: ", err)
 				}
-				doc, _ := goquery.NewDocumentFromReader(res.Body)
+				doc, err = goquery.NewDocumentFromReader(res.Body)
+				if err != nil {
+					log.Println(err)
+				}
 
 				doc.Find("p").Each(func(j int, selection *goquery.Selection) {
 					if strings.Contains(selection.Text(), "summary:") {
@@ -255,6 +260,8 @@ func search(howMany int) {
 						counter++
 					}
 				})
+				//added wait option because the host has become slow, and requests to it need to be slow as well
+				time.Sleep(500*time.Millisecond)
 				//plot
 				if plotState == "yes" {
 					doc.Find("#noidungm").Each(func(j int, selection *goquery.Selection) {
@@ -271,7 +278,6 @@ func search(howMany int) {
 
 		return true
 	})
-
 }
 
 //the function to let the user choose the manga
@@ -317,8 +323,10 @@ func download(chapter float32) bool {
 	if err != nil {
 		log.Println(err)
 	}
-	selection := doc.Find("p")
-	if strings.Contains(selection.Text(), "The server") {
+	selection := doc.Find("span")
+	if strings.Contains(selection.Text(), "Error") {
+		//wait for half a second, otherwise the checking would be too fast and would skip some chapters
+		time.Sleep(600 *time.Millisecond)
 		//if the chapter doesn't exist, delete the just created directory
 		err := os.Remove(dir)
 		if err != nil {
@@ -333,7 +341,7 @@ func download(chapter float32) bool {
 
 		err = dl.DownloadFile(imageURL, fileName)
 		if err == nil && output != "pdf" {
-			fmt.Println("downloading ::", fmt.Sprintf("%s/page%v.jpg", dir, i))
+			fmt.Println("Downloading ::", fmt.Sprintf("%s/page%v.jpg", dir, i))
 		}
 	})
 	return true
@@ -421,16 +429,30 @@ func Execute() {
 			i := 0
 			for {
 				i++
-				if !download(float32(i)) {
+				tmpDownloaded := download(float32(i))
+				if !tmpDownloaded && alreadyChecked{
 					break
+				} else if !tmpDownloaded && !alreadyChecked {
+					fmt.Println("Checking for weird naming conventions...")
+					for j := 0.1; j <= 0.9; j+=0.1 {
+						download(float32(float64(i) +j))
+					}
+					alreadyChecked = true
 				}
 				preparePDF(float64(i))
 			}
 		} else if chapterState == "multiple" {
 			tmp, _ := strconv.ParseFloat(chapterEnd, 32)
 			for i, _ := strconv.ParseFloat(chapterBegin, 32); i <= tmp; i++ {
-				if !download(float32(i)) {
+				tmpDownloaded := download(float32(i))
+				if !tmpDownloaded && alreadyChecked{
 					break
+				} else if !tmpDownloaded && !alreadyChecked {
+					fmt.Println("Checking for weird naming conventions...")
+					for j := 0.1; j <= 0.9; j+=0.1 {
+						download(float32(i +j))
+					}
+					alreadyChecked = true
 				}
 				preparePDF(i)
 			}
