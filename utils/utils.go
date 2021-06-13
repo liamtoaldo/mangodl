@@ -10,6 +10,7 @@ import (
 	"math"
 	"net/http"
 	"os"
+	"runtime"
 	"sort"
 	"strconv"
 	"strings"
@@ -46,7 +47,7 @@ var (
 	foundMangaIDs   []string
 	foundMangaNames []string
 	chosenDirectory string
-	alreadyChecked	= false
+	alreadyChecked  = false
 
 	//optional
 	chapterState  string //single or multiple or all
@@ -202,88 +203,58 @@ func search(howMany int) {
 	doc, _ := goquery.NewDocumentFromReader(res.Body)
 	fmt.Println("Found: ")
 
-	counter := 1 //the variable that counts the number of manga listed in the search.
-
+	counter := 1   //the variable that counts the number of manga listed in the search.
+	previousI := 0 //the previous index, it's used to avoid doubles
 	doc.Find("a").EachWithBreak(func(i int, selection *goquery.Selection) bool {
 		selectedMangaID, _ = selection.Attr("href")
-		//5 is the default for the downloads
-		if howMany == 5 {
-			if strings.Contains(selectedMangaID, "/manga/") && (i == 60 || i == 64 || i == 68 ||i == 72 || i == 76 || i == 80) {
-				selectedMangaID = strings.Split(selectedMangaID, "/")[2]
-				foundMangaIDs = append(foundMangaIDs, selectedMangaID)
+		//this condition checks if the current analyzed manga has the tag title (which means it's not a searched manga) and if the i is greater than the previous i + 1 (to avoid duplicates) but, because of this, the first option gets ignored, so I just added another condition
+		if strings.Contains(selectedMangaID, "/manga/") && selection.AttrOr("title", "y") == "y" && counter <= howMany && ((counter > 1 && i > previousI+1) || counter == 1) {
+			selectedMangaID = strings.Split(selectedMangaID, "/")[2]
+			foundMangaIDs = append(foundMangaIDs, selectedMangaID)
 
-				//search for the manga name, print the first 5 entries and let the user decide
-				URL := fmt.Sprintf("https://ww.mangakakalot.tv/manga/" + selectedMangaID)
-				currentState = 'D'
-				res, err := http.Get(URL)
-				if err != nil {
-					log.Println("Unable to connect to website, error: ", err)
+			//search for the manga name, print the first 5 entries and let the user decide
+			URL := fmt.Sprintf("https://ww.mangakakalot.tv/manga/" + selectedMangaID)
+			currentState = 'D'
+			res, err := http.Get(URL)
+			if err != nil {
+				log.Println("Unable to connect to website, error: ", err)
+			}
+			doc, _ := goquery.NewDocumentFromReader(res.Body)
+
+			doc.Find("p").Each(func(j int, selection *goquery.Selection) {
+				if strings.Contains(selection.Text(), "summary:") {
+					realMangaName = strings.Trim(strings.Replace(selection.Text(), " summary:", "", -1), " ")
+					foundMangaNames = append(foundMangaNames, realMangaName)
+					fmt.Println("["+fmt.Sprint(counter)+"] -", realMangaName)
+					counter++
 				}
-				doc, _ := goquery.NewDocumentFromReader(res.Body)
-
-				doc.Find("p").Each(func(j int, selection *goquery.Selection) {
+			})
+			//added wait option because the host has become slow, and requests to it need to be slow as well
+			time.Sleep(800 * time.Millisecond)
+			//plot
+			if plotState == "yes" {
+				doc.Find("#noidungm").Each(func(j int, selection *goquery.Selection) {
 					if strings.Contains(selection.Text(), "summary:") {
-						realMangaName = strings.Trim(strings.Replace(selection.Text(), " summary:", "", -1), " ")
-						foundMangaNames = append(foundMangaNames, realMangaName)
-						fmt.Println("["+fmt.Sprint(counter)+"] -", realMangaName)
-						counter++
+						fmt.Println(strings.Trim(strings.Replace(strings.Replace(strings.Replace(strings.Trim(selection.Text(), " "), realMangaName, "", -1), "\n", "", -1), "  summary:  ", "", -1), " "))
 						fmt.Println()
 					}
 				})
-				//added wait option because the host has become slow, and requests to it need to be slow as well
-				time.Sleep(500*time.Millisecond)
-				return true
 			}
-
-		} else { //10 is the default for the search
-			if strings.Contains(selectedMangaID, "/manga/") && (i == 60 || i == 64 || i == 68 || i == 72 || i == 76 || i == 80 || i == 84 || i == 88 || i == 92 || i == 96 || i == 100) {
-				selectedMangaID = strings.Split(selectedMangaID, "/")[2]
-				foundMangaIDs = append(foundMangaIDs, selectedMangaID)
-
-				//search for the manga name, print the first 5 entries and let the user decide
-				URL := fmt.Sprintf("https://ww.mangakakalot.tv/manga/" + selectedMangaID)
-				currentState = 'D'
-				res, err := http.Get(URL)
-				if err != nil {
-					log.Println("Unable to connect to website, error: ", err)
-				}
-				doc, err = goquery.NewDocumentFromReader(res.Body)
-				if err != nil {
-					log.Println(err)
-				}
-
-				doc.Find("p").Each(func(j int, selection *goquery.Selection) {
-					if strings.Contains(selection.Text(), "summary:") {
-						realMangaName = strings.Trim(strings.Replace(selection.Text(), " summary:", "", -1), " ")
-						foundMangaNames = append(foundMangaNames, realMangaName)
-						fmt.Println("["+fmt.Sprint(counter)+"] -", realMangaName)
-						counter++
-					}
-				})
-				//added wait option because the host has become slow, and requests to it need to be slow as well
-				time.Sleep(500*time.Millisecond)
-				//plot
-				if plotState == "yes" {
-					doc.Find("#noidungm").Each(func(j int, selection *goquery.Selection) {
-						if strings.Contains(selection.Text(), "summary:") {
-							fmt.Println(strings.Trim(strings.Replace(strings.Replace(strings.Replace(strings.Trim(selection.Text(), " "), realMangaName, "", -1), "\n", "", -1), "  summary:  ", "", -1), " "))
-							fmt.Println()
-						}
-					})
-				}
-
-				return true
-			}
+			previousI = i
+			return true
 		}
 
 		return true
+
 	})
 }
 
 //the function to let the user choose the manga
 func chooseManga() {
+	//time.Sleep(5000 *time.Millisecond)
+	//somehow the first encounter gets added two times, just remove it
+	foundMangaIDs = append(foundMangaIDs[:1], foundMangaIDs[1+1:]...)
 	fmt.Println("Which Manga do you want to download?")
-
 	var inputChoice int
 	fmt.Scan(&inputChoice)
 	switch inputChoice {
@@ -318,6 +289,9 @@ func download(chapter float32) bool {
 	}
 	doc, _ := goquery.NewDocumentFromReader(res.Body)
 
+	if strings.Contains(realMangaName, ":") && runtime.GOOS == "windows" {
+		realMangaName = strings.ReplaceAll(realMangaName, ":", " -")
+	}
 	dir := ReadJSON() + realMangaName + "/Chapter " + fmt.Sprint(chapter)
 	err = os.MkdirAll(dir, 0777)
 	if err != nil {
@@ -326,7 +300,7 @@ func download(chapter float32) bool {
 	selection := doc.Find("span")
 	if strings.Contains(selection.Text(), "Error") {
 		//wait for half a second, otherwise the checking would be too fast and would skip some chapters
-		time.Sleep(600 *time.Millisecond)
+		time.Sleep(600 * time.Millisecond)
 		//if the chapter doesn't exist, delete the just created directory
 		err := os.Remove(dir)
 		if err != nil {
@@ -423,19 +397,20 @@ func Execute() {
 	checkArgs()
 
 	if currentState == 'D' {
-		go search(5) //redirect search in another goroutine
+		plotState = "no"
+		search(5) //redirect search in another goroutine
 		chooseManga()
 		if chapterState == "all" {
 			i := 0
 			for {
 				i++
 				tmpDownloaded := download(float32(i))
-				if !tmpDownloaded && alreadyChecked{
+				if !tmpDownloaded && alreadyChecked {
 					break
 				} else if !tmpDownloaded && !alreadyChecked {
 					fmt.Println("Checking for weird naming conventions...")
-					for j := 0.1; j <= 0.9; j+=0.1 {
-						download(float32(float64(i) +j))
+					for j := 0.1; j <= 0.9; j += 0.1 {
+						download(float32(float64(i) + j))
 					}
 					alreadyChecked = true
 				}
@@ -445,12 +420,12 @@ func Execute() {
 			tmp, _ := strconv.ParseFloat(chapterEnd, 32)
 			for i, _ := strconv.ParseFloat(chapterBegin, 32); i <= tmp; i++ {
 				tmpDownloaded := download(float32(i))
-				if !tmpDownloaded && alreadyChecked{
+				if !tmpDownloaded && alreadyChecked {
 					break
 				} else if !tmpDownloaded && !alreadyChecked {
 					fmt.Println("Checking for weird naming conventions...")
-					for j := 0.1; j <= 0.9; j+=0.1 {
-						download(float32(i +j))
+					for j := 0.1; j <= 0.9; j += 0.1 {
+						download(float32(i + j))
 					}
 					alreadyChecked = true
 				}
