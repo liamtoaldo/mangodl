@@ -230,7 +230,7 @@ func search(howMany int) {
 				}
 			})
 			//added wait option because the host has become slow, and requests to it need to be slow as well
-			time.Sleep(800 * time.Millisecond)
+			time.Sleep(300 * time.Millisecond)
 			//plot
 			if plotState == "yes" {
 				doc.Find("#noidungm").Each(func(j int, selection *goquery.Selection) {
@@ -251,9 +251,6 @@ func search(howMany int) {
 
 //the function to let the user choose the manga
 func chooseManga() {
-	//time.Sleep(5000 *time.Millisecond)
-	//somehow the first encounter gets added two times, just remove it
-	foundMangaIDs = append(foundMangaIDs[:1], foundMangaIDs[1+1:]...)
 	fmt.Println("Which Manga do you want to download?")
 	var inputChoice int
 	fmt.Scan(&inputChoice)
@@ -282,7 +279,7 @@ func chooseManga() {
 //download the chosen manga
 func download(chapter float32) bool {
 
-	URL := fmt.Sprintf("https://ww.mangakakalot.tv/chapter/%s/chapter_%v", selectedMangaID, chapter)
+	URL := fmt.Sprintf("https://ww.mangakakalot.tv/chapter/%s/chapter-%v", selectedMangaID, chapter)
 	res, err := http.Get(URL)
 	if err != nil {
 		log.Println("Unable to connect to website, error: ", err)
@@ -300,7 +297,7 @@ func download(chapter float32) bool {
 	selection := doc.Find("span")
 	if strings.Contains(selection.Text(), "Error") {
 		//wait for half a second, otherwise the checking would be too fast and would skip some chapters
-		time.Sleep(600 * time.Millisecond)
+		time.Sleep(300 * time.Millisecond)
 		//if the chapter doesn't exist, delete the just created directory
 		err := os.Remove(dir)
 		if err != nil {
