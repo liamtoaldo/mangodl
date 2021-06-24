@@ -13,10 +13,13 @@ import (
 //ConvertToPDF takes as input the path of the files and creates a PDF with the images of the pages
 func ConvertToPDF(inputImages []string, outputPDF string) {
 	pdf := gopdf.GoPdf{}
-	pagesWidth, pagesHeight := getSizes(inputImages[len(inputImages)/2])                                       //GetSizes is not precise by default, so dividing the sizes by 1.8 the page should return to the normal size
+	pagesWidth, pagesHeight := getSizes(inputImages[0])                                                        //GetSizes is not precise by default, so dividing the sizes by 1.8 the page should return to the normal size
 	pdf.Start(gopdf.Config{PageSize: gopdf.Rect{W: float64(pagesWidth) / 1.8, H: float64(pagesHeight) / 1.8}}) //595.28, 841.89 = A4
 	for _, page := range inputImages {
-		pdf.AddPage()
+		currentPageWidth, currentPageHeight := getSizes(page)
+		pdf.AddPageWithOption(gopdf.PageOption{
+			PageSize: &gopdf.Rect{W: float64(currentPageWidth) / 1.8, H: float64(currentPageHeight) / 1.8},
+		})
 		err := pdf.Image(page, 0, 0, nil)
 		if err != nil {
 			log.Print(err)
