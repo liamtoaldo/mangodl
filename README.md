@@ -72,9 +72,8 @@ To get a local copy up and running follow these simple steps.
 ### Installation
 
 #### Linux
+Download the files mangodl and install.sh from the latest Linux version in the [Releases](https://github.com/Gyro7/mangodl/releases)
 ```sh
-Download the files mangodl and install.sh from the latest Linux version in the Releases
-
 # run the installation script
 chmod +x install.sh
 ./install.sh
@@ -96,7 +95,7 @@ An AUR package is now available.
 
 Just `yay -S mangodl` or, if you use paru `paru -S mangodl`
 #### Windows
-Download the executable (mangodl.exe) from the latest Windows version in the releases  
+Download the executable (mangodl.exe) from the latest Windows version in the [Releases](https://github.com/Gyro7/mangodl/releases)  
 If you just want to use it without installing it, just run mangodl.exe everytime and skip these steps below
 ```sh
 Open start menu,
@@ -111,11 +110,9 @@ Open start menu,
 ```
 
 #### macOS
-If you haven't already given the terminal access to the disk, then do it, for further help see <b>[THIS](https://osxdaily.com/2018/10/09/fix-operation-not-permitted-terminal-error-macos/) </b>
-
-Anyway, this is not tested, so if you have macOS and want to test/fix just create a pull request or an issue.
+If you haven't already given the terminal access to the disk, then do it, for further help see <b>[THIS](https://osxdaily.com/2018/10/09/fix-operation-not-permitted-terminal-error-macos/) </b>  
+Download the executable mangodl-darwin from the latest macOS version in the [Releases](https://github.com/Gyro7/mangodl/releases)
 ```sh
-Download the executable mangodl-darwin from the latest macOS version in the Releases
 # rename the executable
 mv mangodl-darwin mangodl
 chmod +x mangodl
