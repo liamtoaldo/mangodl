@@ -73,9 +73,7 @@ To get a local copy up and running follow these simple steps.
 
 #### Linux
 ```sh
-# clone and go into the repository
-git clone https://github.com/Gyro7/mangodl.git
-cd mangodl
+Download the files mangodl and install.sh from the latest Linux version in the Releases
 
 # run the installation script
 chmod +x install.sh
@@ -98,6 +96,7 @@ An AUR package is now available.
 
 Just `yay -S mangodl` or, if you use paru `paru -S mangodl`
 #### Windows
+Download the executable (mangodl.exe) from the latest Windows version in the releases  
 If you just want to use it without installing it, just run mangodl.exe everytime and skip these steps below
 ```sh
 Open start menu,
@@ -116,11 +115,8 @@ If you haven't already given the terminal access to the disk, then do it, for fu
 
 Anyway, this is not tested, so if you have macOS and want to test/fix just create a pull request or an issue.
 ```sh
-# clone and go into the repository
-git clone https://github.com/Gyro7/mangodl.git
-cd mangodl
-# remove the linux executable, rename the macos one to mangodl and make it executable
-rm mangodl
+Download the executable mangodl-darwin from the latest macOS version in the Releases
+# rename the executable
 mv mangodl-darwin mangodl
 chmod +x mangodl
 # move the executable to the /usr/local/bin/ path, be aware of not deleting the directory!
