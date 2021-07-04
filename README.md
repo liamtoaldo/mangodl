@@ -35,6 +35,7 @@ Download and search manga right from the terminal!
         -   [Arch Linux and derivatives](#arch-linux-and-derivatives)
         -   [Windows](#windows)
         -   [macOS](#macos)
+        -   [macOS (alternative)](#macos-alternative)
 -   [Usage](#usage)
 -   [Reading](#reading)
 -   [Roadmap](#roadmap)
@@ -117,6 +118,7 @@ brew tap https://github.com/Gyro7/mangodl
 brew install mangodl
 ```
 
+#### macOS (alternative)
 Download the executable mangodl-darwin from the latest macOS version in the [Releases](https://github.com/Gyro7/mangodl/releases)
 ```sh
 # rename the executable
