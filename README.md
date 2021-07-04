@@ -113,8 +113,8 @@ Open start menu,
 If you haven't already given the terminal access to the disk, then do it, for further help see <b>[THIS](https://osxdaily.com/2018/10/09/fix-operation-not-permitted-terminal-error-macos/) </b>  
 Installing via brew (assuming that `/usr/local/bin` is already in the $PATH variable):
 ```bash
-    brew tap https://github.com/Gyro7/mangodl
-    brew install mangodl
+brew tap https://github.com/Gyro7/mangodl
+brew install mangodl
 ```
 
 Download the executable mangodl-darwin from the latest macOS version in the [Releases](https://github.com/Gyro7/mangodl/releases)
