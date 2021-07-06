@@ -8,7 +8,7 @@ class Mangodl < Formula
   depends_on "go" => :build
 
   def install
-      system "go", "build", "-o", "#{prefix}"
+      system "go", "build", "-o", "/usr/local/bin"
   end
 
   test do
