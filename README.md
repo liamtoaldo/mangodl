@@ -35,6 +35,7 @@ Download and search manga right from the terminal!
         -   [Arch Linux and derivatives](#arch-linux-and-derivatives)
         -   [Windows](#windows)
         -   [macOS](#macos)
+        -   [macOS (alternative)](#macos-alternative)
 -   [Usage](#usage)
 -   [Reading](#reading)
 -   [Roadmap](#roadmap)
@@ -66,8 +67,8 @@ To get a local copy up and running follow these simple steps.
 
 ### Prerequisites
 
--   golang (if you want to build from source)
--   linux, windows or mac
+-   Go compiler (if you want to build from source)
+-   Linux, Windows or Mac
 
 ### Installation
 
@@ -111,6 +112,13 @@ Open start menu,
 
 #### macOS
 If you haven't already given the terminal access to the disk, then do it, for further help see <b>[THIS](https://osxdaily.com/2018/10/09/fix-operation-not-permitted-terminal-error-macos/) </b>  
+Installing via brew (assuming that `/usr/local/bin` is already in the $PATH variable):
+```bash
+brew tap Gyro7/mangodl
+brew install --build-from-source mangodl
+```
+
+#### macOS (alternative)
 Download the executable mangodl-darwin from the latest macOS version in the [Releases](https://github.com/Gyro7/mangodl/releases)
 ```sh
 # rename the executable
