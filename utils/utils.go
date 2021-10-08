@@ -72,7 +72,7 @@ Arguments and flags:
 	-h, --help			shows this message and exit
 
 	Needed (one of them):
-	-D, --download			downloads the manga specified after -D (e.g. mangodl -D jojo will search for 5 manga with that name and ask you which one to download)
+	-D, --download			downloads the manga specified after -D (e.g. mangodl -D jojo will search for 10 manga with that name and ask you which one to download)
 	-S, --search			searches for the manga specified after this flag (e.g. mangodl -S "kanojo x kanojo" will search and display the manga found with that name)
 	-Q, --query			show downloaded manga
 	-Dir, --directory		sets the default directory to download manga (e.g. mangodl -Dir "$HOME/Documents/manga/"), otherwise the default one would be "$HOME/Downloaded Manga/" and the Desktop for Windows
@@ -191,7 +191,7 @@ func checkArgs() {
 	}
 }
 
-//looks for manga and displays them (5 for download and 10 for just searching)
+//looks for manga and displays them (10 for download and 10 for just searching)
 func search(howMany int) {
 	URL := fmt.Sprintf("https://ww.mangakakalot.tv/search/" + mangaName)
 	currentState = 'D'
@@ -212,7 +212,7 @@ func search(howMany int) {
 			selectedMangaID = strings.Split(selectedMangaID, "/")[2]
 			foundMangaIDs = append(foundMangaIDs, selectedMangaID)
 
-			//search for the manga name, print the first 5 entries and let the user decide
+			//search for the manga name, print the first 10 entries and let the user decide
 			URL := fmt.Sprintf("https://ww.mangakakalot.tv/manga/" + selectedMangaID)
 			currentState = 'D'
 			res, err := http.Get(URL)
@@ -270,6 +270,21 @@ func chooseManga() {
 	case 5:
 		selectedMangaID = foundMangaIDs[4]
 		realMangaName = foundMangaNames[4]
+	case 6:
+		selectedMangaID = foundMangaIDs[5]
+		realMangaName = foundMangaNames[5]
+	case 7:
+		selectedMangaID = foundMangaIDs[6]
+		realMangaName = foundMangaNames[6]
+	case 8:
+		selectedMangaID = foundMangaIDs[7]
+		realMangaName = foundMangaNames[7]
+	case 9:
+		selectedMangaID = foundMangaIDs[8]
+		realMangaName = foundMangaNames[8]
+	case 10:
+		selectedMangaID = foundMangaIDs[9]
+		realMangaName = foundMangaNames[9]
 	}
 	if output == "pdf" {
 		fmt.Println("Starting to download images to be converted...")
@@ -395,7 +410,7 @@ func Execute() {
 
 	if currentState == 'D' {
 		plotState = "no"
-		search(5) //redirect search in another goroutine
+		search(10) //redirect search in another goroutine
 		chooseManga()
 		if chapterState == "all" {
 			i := 0
