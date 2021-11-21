@@ -331,7 +331,7 @@ func download(chapter float32) bool {
 
 	doc.Find("img").Each(func(i int, selection *goquery.Selection) {
 		imageURL, _ := selection.Attr("data-src")
-		fileName := fmt.Sprintf("%s/page%04d.jpg", dir, i)
+		fileName := fmt.Sprintf("%s/page%03d.jpg", dir, i)
 
 		err = dl.DownloadFile(imageURL, fileName)
 		if err == nil && output != "pdf" {
@@ -387,7 +387,7 @@ func preparePDF(i float64) {
 		pageNumber := pdf.GetNumberOfPages(dir)
 		var pages []string
 		for j := 1; j <= pageNumber; j++ {
-			pages = append(pages, fmt.Sprintf("%s/page%v.jpg", dir, j))
+			pages = append(pages, fmt.Sprintf("%s/page%03d.jpg", dir, j))
 		}
 		fmt.Println("Converting the downloaded images to PDF in", fmt.Sprintf("%s/Chapter%v.pdf", dir, i))
 		pdf.ConvertToPDF(pages, fmt.Sprintf("%s/Chapter%v.pdf", dir, i))
