@@ -331,11 +331,11 @@ func download(chapter float32) bool {
 
 	doc.Find("img").Each(func(i int, selection *goquery.Selection) {
 		imageURL, _ := selection.Attr("data-src")
-		fileName := fmt.Sprintf("%s/page%v.jpg", dir, i)
+		fileName := fmt.Sprintf("%s/page%04d.jpg", dir, i)
 
 		err = dl.DownloadFile(imageURL, fileName)
 		if err == nil && output != "pdf" {
-			fmt.Println("Downloading ::", fmt.Sprintf("%s/page%v.jpg", dir, i))
+			fmt.Println("Downloading ::", fileName)
 		}
 	})
 	return true
