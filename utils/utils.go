@@ -36,6 +36,8 @@ const (
 	NOPLOTFLAGALT       = "--noplot"
 	OUTPUTFLAG          = "-o"
 	OUTPUTFLAGALT       = "--output"
+	SPECIALFLAG         = "-s"
+	SPECIALFLAGALT      = "--special"
 )
 
 //the variables based on the user's results
@@ -56,6 +58,7 @@ var (
 	chapterEnd    string
 	plotState     string  //no or yes
 	output        = "img" //img or pdf, default is image
+	special       = false
 )
 
 type DownloadedManga struct {
@@ -180,6 +183,7 @@ func checkArgs() {
 		} else {
 			plotState = "yes"
 		}
+		//output
 		if s == OUTPUTFLAG || s == OUTPUTFLAGALT {
 			if !isNextArg(i + 1) {
 				currentState = 'E'
@@ -187,6 +191,10 @@ func checkArgs() {
 				return
 			}
 			output = os.Args[i+1]
+		}
+		//special chapters
+		if s == SPECIALFLAG || s == SPECIALFLAGALT {
+			special = true
 		}
 	}
 }
