@@ -85,6 +85,7 @@ Arguments and flags:
 	-c, --chapter			used to specify the chapter to download (if omitted it will download them all)
 	-cr, --chapterrange		used to specify a range of chapters to download (e.g. mangodl -D "Martial Peak" -cr 1 99 will download chapters from 1 to 99 (included)
 	-o, --output			used to specify the file output of the pages (img or pdf), e.g. mangodl -D "Tokyo Revengers" -o pdf will create a pdf for every chapter. By default, it's images 
+	-s, --special			used to download "special" chapters too, the ones with floating point values (13.1, 14.7, 99.3, etc). Makes the downloads slower, so use this only if needed
 	
 	For -S:
 	-n, --noplot		do not print the plot of searched manga	
@@ -296,14 +297,19 @@ func chooseManga() {
 		realMangaName = foundMangaNames[9]
 	}
 	if output == "pdf" {
-		fmt.Println("Starting to download images to be converted...")
+		fmt.Println("Downloading images to be converted...")
 	}
 }
 
 //download the chosen manga
 func download(chapter float32) bool {
-
-	URL := fmt.Sprintf("https://ww.mangakakalot.tv/chapter/%s/chapter-%v", selectedMangaID, chapter)
+	var chapterNumber string
+	if chapter-float32(int(chapter)) > 0 {
+		chapterNumber = strconv.FormatFloat(float64(chapter), 'f', 1, 64)
+	} else {
+		chapterNumber = strconv.FormatFloat(float64(chapter), 'f', -1, 64)
+	}
+	URL := fmt.Sprintf("https://ww.mangakakalot.tv/chapter/%s/chapter-%v", selectedMangaID, fmt.Sprint(chapterNumber))
 	res, err := http.Get(URL)
 	if err != nil {
 		log.Println("Unable to connect to website, error: ", err)
@@ -313,7 +319,7 @@ func download(chapter float32) bool {
 	if strings.Contains(realMangaName, ":") && runtime.GOOS == "windows" {
 		realMangaName = strings.ReplaceAll(realMangaName, ":", " -")
 	}
-	dir := ReadJSON() + realMangaName + "/Chapter " + fmt.Sprint(chapter)
+	dir := ReadJSON() + realMangaName + "/Chapter " + fmt.Sprint(chapterNumber)
 	err = os.MkdirAll(dir, 0777)
 	if err != nil {
 		log.Println(err)
@@ -384,14 +390,20 @@ func showDownloaded() {
 func preparePDF(i float64) {
 
 	if output == "pdf" {
-		dir := ReadJSON() + realMangaName + "/Chapter " + fmt.Sprint(i)
+		var chapterNumber string
+		if i-float64(int(i)) > 0 {
+			chapterNumber = strconv.FormatFloat(i, 'f', 1, 64)
+		} else {
+			chapterNumber = strconv.FormatFloat(i, 'f', -1, 64)
+		}
+		dir := ReadJSON() + realMangaName + "/Chapter " + chapterNumber
 		pageNumber := pdf.GetNumberOfPages(dir)
 		var pages []string
 		for j := 1; j <= pageNumber; j++ {
 			pages = append(pages, fmt.Sprintf("%s/page%03d.jpg", dir, j))
 		}
-		fmt.Println("Converting the downloaded images to PDF in", fmt.Sprintf("%s/Chapter%v.pdf", dir, i))
-		pdf.ConvertToPDF(pages, fmt.Sprintf("%s/Chapter%v.pdf", dir, i))
+		fmt.Println("Converting the downloaded images to PDF in", fmt.Sprintf("%s/Chapter%v.pdf", dir, chapterNumber))
+		pdf.ConvertToPDF(pages, fmt.Sprintf("%s/Chapter%v.pdf", dir, chapterNumber))
 		deleteImages(fmt.Sprintf(dir))
 	}
 }
@@ -418,44 +430,111 @@ func Execute() {
 	checkArgs()
 
 	if currentState == 'D' {
+
 		plotState = "no"
 		search(10) //redirect search in another goroutine
 		chooseManga()
 		if chapterState == "all" {
-			i := 0
-			for {
-				i++
-				tmpDownloaded := download(float32(i))
-				if !tmpDownloaded && alreadyChecked {
-					break
-				} else if !tmpDownloaded && !alreadyChecked {
-					fmt.Println("Checking for weird naming conventions...")
-					for j := 0.1; j <= 0.9; j += 0.1 {
-						download(float32(float64(i) + j))
+			if special {
+				i := 0
+				for {
+					i++
+					tmpDownloaded := download(float32(i))
+					if tmpDownloaded {
+						preparePDF(float64(i))
 					}
 					alreadyChecked = true
+					for j := 0.1; j <= 0.9; j += 0.1 {
+						if download(float32(float64(i) + j)) {
+							alreadyChecked = false
+							preparePDF(float64(i) + j)
+						}
+					}
+					if !tmpDownloaded && alreadyChecked {
+						break
+					}
 				}
-				preparePDF(float64(i))
+			} else {
+				i := 0
+				for {
+					i++
+					tmpDownloaded := download(float32(i))
+					if tmpDownloaded {
+						preparePDF(float64(i))
+					}
+					if !tmpDownloaded && alreadyChecked {
+						break
+					} else if !tmpDownloaded && !alreadyChecked {
+						fmt.Println("Checking for weird naming conventions...")
+						for j := 0.1; j <= 0.9; j += 0.1 {
+							if download(float32(float64(i) + j)) {
+								preparePDF(float64(i) + j)
+							}
+						}
+						alreadyChecked = true
+					}
+				}
 			}
 		} else if chapterState == "multiple" {
-			tmp, _ := strconv.ParseFloat(chapterEnd, 32)
-			for i, _ := strconv.ParseFloat(chapterBegin, 32); i <= tmp; i++ {
-				tmpDownloaded := download(float32(i))
-				if !tmpDownloaded && alreadyChecked {
-					break
-				} else if !tmpDownloaded && !alreadyChecked {
-					fmt.Println("Checking for weird naming conventions...")
-					for j := 0.1; j <= 0.9; j += 0.1 {
-						download(float32(i + j))
+			if special {
+				tmp, _ := strconv.ParseFloat(chapterEnd, 32)
+				for i, _ := strconv.ParseFloat(chapterBegin, 32); i <= tmp; i++ {
+					tmpDownloaded := download(float32(i))
+					if tmpDownloaded {
+						preparePDF(i)
 					}
 					alreadyChecked = true
+					for j := i - float64(int(i)); j <= 0.9; j += 0.1 {
+						//if the chapter is a whole number, it gets redownloaded, so add +0.1 to avoid that.
+						if j == 0.0 {
+							j = 0.1
+						}
+						//out of the loop if the chapter being downloaded is greater than the last chapter.
+						if i+j >= tmp {
+							break
+						}
+						if download(float32(i + j)) {
+							alreadyChecked = false
+							preparePDF(i + j)
+						}
+					}
+					if !tmpDownloaded && alreadyChecked {
+						break
+					}
+					i = float64(int(i))
 				}
-				preparePDF(i)
-				i = float64(int(i))
-			}
-			//checks if the chapterEnd (tmp) is a whole number, if it isn't, then it downloads the last chapter (which is decimal)
-			if tmp != float64(int64(tmp)) {
-				download(float32(tmp))
+				//checks if the chapterEnd (tmp) is a whole number, if it isn't, then it downloads the last chapter (which is decimal)
+				if tmp != float64(int64(tmp)) {
+					if download(float32(tmp)) {
+						preparePDF(tmp)
+					}
+				}
+			} else {
+				tmp, _ := strconv.ParseFloat(chapterEnd, 32)
+				for i, _ := strconv.ParseFloat(chapterBegin, 32); i <= tmp; i++ {
+					tmpDownloaded := download(float32(i))
+					if tmpDownloaded {
+						preparePDF(i)
+					}
+					if !tmpDownloaded && alreadyChecked {
+						break
+					} else if !tmpDownloaded && !alreadyChecked {
+						fmt.Println("Checking for weird naming conventions...")
+						for j := 0.1; j <= 0.9; j += 0.1 {
+							if download(float32(i + j)) {
+								preparePDF(i)
+							}
+						}
+						alreadyChecked = true
+					}
+					i = float64(int(i))
+				}
+				//checks if the chapterEnd (tmp) is a whole number, if it isn't, then it downloads the last chapter (which is decimal)
+				if tmp != float64(int64(tmp)) {
+					if download(float32(tmp)) {
+						preparePDF(tmp)
+					}
+				}
 			}
 		} else if chapterState == "single" {
 			tmp, _ := strconv.ParseFloat(singleChapter, 32)
