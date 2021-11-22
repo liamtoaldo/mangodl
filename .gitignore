@@ -15,4 +15,6 @@
 # vendor/
 
 # personal script to create DMGs
-dmg-creator.sh
+dmg-creator.sh!/mangodl.dmg
+!/mangodl-darwin
+!/mangodl.tar.gz
