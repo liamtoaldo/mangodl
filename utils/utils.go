@@ -195,6 +195,7 @@ func checkArgs() {
 		//special chapters
 		if s == SPECIALFLAG || s == SPECIALFLAGALT {
 			special = true
+			//TODO this
 		}
 	}
 }
@@ -450,6 +451,11 @@ func Execute() {
 					alreadyChecked = true
 				}
 				preparePDF(i)
+				i = float64(int(i))
+			}
+			//checks if the chapterEnd (tmp) is a whole number, if it isn't, then it downloads the last chapter (which is decimal)
+			if tmp != float64(int64(tmp)) {
+				download(float32(tmp))
 			}
 		} else if chapterState == "single" {
 			tmp, _ := strconv.ParseFloat(singleChapter, 32)
