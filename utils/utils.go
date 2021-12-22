@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	dl "mangodl/download"
-	"mangodl/pdf"
+	outl "mangodl/output"
 	"math"
 	"net/http"
 	"os"
@@ -196,7 +196,6 @@ func checkArgs() {
 		//special chapters
 		if s == SPECIALFLAG || s == SPECIALFLAGALT {
 			special = true
-			//TODO this
 		}
 	}
 }
@@ -296,7 +295,7 @@ func chooseManga() {
 		selectedMangaID = foundMangaIDs[9]
 		realMangaName = foundMangaNames[9]
 	}
-	if output == "pdf" {
+	if output != "img" {
 		fmt.Println("Downloading images to be converted...")
 	}
 }
@@ -341,7 +340,7 @@ func download(chapter float32) bool {
 		fileName := fmt.Sprintf("%s/page%03d.jpg", dir, i)
 
 		err = dl.DownloadFile(imageURL, fileName)
-		if err == nil && output != "pdf" {
+		if err == nil && output == "img" {
 			fmt.Println("Downloading ::", fileName)
 		}
 	})
@@ -386,10 +385,9 @@ func showDownloaded() {
 	}
 }
 
-//this function checks if the output was redirected to pdf, and if it is, it takes care of it
-func preparePDF(i float64) {
-
-	if output == "pdf" {
+//this function checks if the output was redirected to pdf or cbz, and if it was, it takes care of it
+func prepareOutput(i float64) {
+	if output != "img" {
 		var chapterNumber string
 		if i-float64(int(i)) > 0 {
 			chapterNumber = strconv.FormatFloat(i, 'f', 1, 64)
@@ -397,13 +395,18 @@ func preparePDF(i float64) {
 			chapterNumber = strconv.FormatFloat(i, 'f', -1, 64)
 		}
 		dir := ReadJSON() + realMangaName + "/Chapter " + chapterNumber
-		pageNumber := pdf.GetNumberOfPages(dir)
+		pageNumber := outl.GetNumberOfPages(dir)
 		var pages []string
 		for j := 1; j <= pageNumber; j++ {
 			pages = append(pages, fmt.Sprintf("%s/page%03d.jpg", dir, j))
 		}
-		fmt.Println("Converting the downloaded images to PDF in", fmt.Sprintf("%s/Chapter%v.pdf", dir, chapterNumber))
-		pdf.ConvertToPDF(pages, fmt.Sprintf("%s/Chapter%v.pdf", dir, chapterNumber))
+		if output == "pdf" {
+			fmt.Println("Converting the downloaded images to PDF in", fmt.Sprintf("%s/Chapter%v.pdf", dir, chapterNumber))
+			outl.ConvertToPDF(pages, fmt.Sprintf("%s/Chapter%v.pdf", dir, chapterNumber))
+		} else if output == "cbz" {
+			fmt.Println("Converting the downloaded images to CBZ in", fmt.Sprintf("%s/Chapter%v.cbz", dir, chapterNumber))
+			outl.ConvertToCBZ(pages, fmt.Sprintf("%s/Chapter%v.cbz", dir, chapterNumber))
+		}
 		deleteImages(fmt.Sprintf(dir))
 	}
 }
@@ -441,13 +444,13 @@ func Execute() {
 					i++
 					tmpDownloaded := download(float32(i))
 					if tmpDownloaded {
-						preparePDF(float64(i))
+						prepareOutput(float64(i))
 					}
 					alreadyChecked = true
 					for j := 0.1; j <= 0.9; j += 0.1 {
 						if download(float32(float64(i) + j)) {
 							alreadyChecked = false
-							preparePDF(float64(i) + j)
+							prepareOutput(float64(i) + j)
 						}
 					}
 					if !tmpDownloaded && alreadyChecked {
@@ -460,7 +463,7 @@ func Execute() {
 					i++
 					tmpDownloaded := download(float32(i))
 					if tmpDownloaded {
-						preparePDF(float64(i))
+						prepareOutput(float64(i))
 					}
 					if !tmpDownloaded && alreadyChecked {
 						break
@@ -468,7 +471,7 @@ func Execute() {
 						fmt.Println("Checking for weird naming conventions...")
 						for j := 0.1; j <= 0.9; j += 0.1 {
 							if download(float32(float64(i) + j)) {
-								preparePDF(float64(i) + j)
+								prepareOutput(float64(i) + j)
 							}
 						}
 						alreadyChecked = true
@@ -481,7 +484,7 @@ func Execute() {
 				for i, _ := strconv.ParseFloat(chapterBegin, 32); i <= tmp; i++ {
 					tmpDownloaded := download(float32(i))
 					if tmpDownloaded {
-						preparePDF(i)
+						prepareOutput(i)
 					}
 					alreadyChecked = true
 					for j := i - float64(int(i)); j <= 0.9; j += 0.1 {
@@ -495,7 +498,7 @@ func Execute() {
 						}
 						if download(float32(i + j)) {
 							alreadyChecked = false
-							preparePDF(i + j)
+							prepareOutput(i + j)
 						}
 					}
 					if !tmpDownloaded && alreadyChecked {
@@ -506,7 +509,7 @@ func Execute() {
 				//checks if the chapterEnd (tmp) is a whole number, if it isn't, then it downloads the last chapter (which is decimal)
 				if tmp != float64(int64(tmp)) {
 					if download(float32(tmp)) {
-						preparePDF(tmp)
+						prepareOutput(tmp)
 					}
 				}
 			} else {
@@ -514,7 +517,7 @@ func Execute() {
 				for i, _ := strconv.ParseFloat(chapterBegin, 32); i <= tmp; i++ {
 					tmpDownloaded := download(float32(i))
 					if tmpDownloaded {
-						preparePDF(i)
+						prepareOutput(i)
 					}
 					if !tmpDownloaded && alreadyChecked {
 						break
@@ -522,7 +525,7 @@ func Execute() {
 						fmt.Println("Checking for weird naming conventions...")
 						for j := 0.1; j <= 0.9; j += 0.1 {
 							if download(float32(i + j)) {
-								preparePDF(i)
+								prepareOutput(i)
 							}
 						}
 						alreadyChecked = true
@@ -532,14 +535,14 @@ func Execute() {
 				//checks if the chapterEnd (tmp) is a whole number, if it isn't, then it downloads the last chapter (which is decimal)
 				if tmp != float64(int64(tmp)) {
 					if download(float32(tmp)) {
-						preparePDF(tmp)
+						prepareOutput(tmp)
 					}
 				}
 			}
 		} else if chapterState == "single" {
 			tmp, _ := strconv.ParseFloat(singleChapter, 32)
 			download(float32(tmp))
-			preparePDF(tmp)
+			prepareOutput(tmp)
 		}
 	} else if currentState == 'Q' {
 		showDownloaded()
