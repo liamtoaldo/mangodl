@@ -7,7 +7,9 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="db0236da-823a-4d21-85b8-0abe0dabb6f7" name="Default Changelist" comment="&quot;Added gitignore&quot;">
+    <list default="true" id="db0236da-823a-4d21-85b8-0abe0dabb6f7" name="Default Changelist" comment="Removed gif">
+      <change afterPath="$PROJECT_DIR$/assets/example.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -129,7 +131,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Tidied the TODO list once again" />
     <MESSAGE value="Fixed chapters sorting in --query." />
     <MESSAGE value="Tidied the TODO list once again." />
     <MESSAGE value="Added new binaries." />
@@ -154,7 +155,8 @@
     <MESSAGE value="Deleted the really heavy gif." />
     <MESSAGE value="New modules for Idea" />
     <MESSAGE value="&quot;Added gitignore&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;Added gitignore&quot;" />
+    <MESSAGE value="Removed gif" />
+    <option name="LAST_COMMIT_MESSAGE" value="Removed gif" />
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
