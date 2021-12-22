@@ -73,7 +73,7 @@ To get a local copy up and running follow these simple steps.
 ### Installation
 
 #### Linux
-Download the files mangodl and install.sh from the latest Linux version in the [Releases](https://github.com/Gyro7/mangodl/releases)
+Download the files _mangodl_ and _install.sh_ from the latest Linux version in the [Releases](https://github.com/Gyro7/mangodl/releases)
 ```sh
 # run the installation script
 chmod +x install.sh
@@ -135,7 +135,7 @@ Arguments and flags:
 	-h, --help			shows this message and exit
 
 	Needed (one of them):
-	-D, --download			downloads the manga specified after -D (e.g. mangodl -D jojo will search for 5 manga with that name and ask you which one to download)
+	-D, --download			downloads the manga specified after -D (e.g. mangodl -D jojo will search for 10 manga with that name and ask you which one to download)
 	-S, --search			searches for the manga specified after this flag (e.g. mangodl -S "kanojo x kanojo" will search and display the manga found with that name)
 	-Q, --query			show downloaded manga
 	-Dir, --directory		sets the default directory to download manga (e.g. mangodl -Dir "$HOME/Documents/manga/"), otherwise the default one would be "$HOME/Downloaded Manga/" and the Desktop for Windows
@@ -144,7 +144,8 @@ Arguments and flags:
 	For -D:
 	-c, --chapter			used to specify the chapter to download (if omitted it will download them all)
 	-cr, --chapterrange		used to specify a range of chapters to download (e.g. mangodl -D "Martial Peak" -cr 1 99 will download chapters from 1 to 99 (included)
-	-o, --output			used to specify the file output of the pages (img or pdf), e.g. mangodl -D "Tokyo Revengers" -o pdf will create a pdf for every chapter. By default, it's images.
+	-o, --output			used to specify the file output of the pages (img, pdf or cbz), e.g. mangodl -D "Tokyo Revengers" -o pdf will create a pdf for every chapter. By default, it's images
+	-s, --special			used to download "special" chapters too, the ones with floating point values (13.1, 14.7, 99.3, etc). Makes the downloads slower, so use this only if needed
 	
 	For -S:
 	-n, --noplot		do not print the plot of searched manga	
