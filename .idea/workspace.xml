@@ -7,7 +7,7 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="db0236da-823a-4d21-85b8-0abe0dabb6f7" name="Default Changelist" comment="Deleted the really heavy gif." />
+    <list default="true" id="db0236da-823a-4d21-85b8-0abe0dabb6f7" name="Default Changelist" comment="New modules for Idea" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -127,7 +127,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Added option to convert chapters into PDF" />
     <MESSAGE value="Fixed the bug that omitted automatically the plot when searching a manga, and added new binaries" />
     <MESSAGE value="Tidied the TODO list once again" />
     <MESSAGE value="Fixed chapters sorting in --query." />
@@ -152,7 +151,8 @@
     <MESSAGE value="Updated Readme" />
     <MESSAGE value="Added new Binary" />
     <MESSAGE value="Deleted the really heavy gif." />
-    <option name="LAST_COMMIT_MESSAGE" value="Deleted the really heavy gif." />
+    <MESSAGE value="New modules for Idea" />
+    <option name="LAST_COMMIT_MESSAGE" value="New modules for Idea" />
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
