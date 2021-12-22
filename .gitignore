@@ -19,3 +19,5 @@ dmg-creator.sh
 mangodl.dmg
 mangodl-darwin
 mangodl.tar.gz
+
+.idea/workspace.xml
