@@ -185,7 +185,7 @@ Distributed under the GPL 3.0 License. See `LICENSE` for more information.
 
 ## Contact
 
-Me - [gyro@sach1.tk](mailto:gyro@sach1.tk)
+Me - [gyroo@tuta.io](mailto:gyroo@tuta.io)
 
 Project Link: [https://github.com/Gyro7/mangodl](https://github.com/Gyro7/gofetch)
 
