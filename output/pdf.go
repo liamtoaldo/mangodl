@@ -1,4 +1,4 @@
-package pdf
+package output
 
 import (
 	"bufio"
