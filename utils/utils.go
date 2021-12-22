@@ -57,7 +57,7 @@ var (
 	chapterBegin  string
 	chapterEnd    string
 	plotState     string  //no or yes
-	output        = "img" //img or pdf, default is image
+	output        = "img" //img, pdf or cbz, default is image
 	special       = false
 )
 
@@ -84,7 +84,7 @@ Arguments and flags:
 	For -D:
 	-c, --chapter			used to specify the chapter to download (if omitted it will download them all)
 	-cr, --chapterrange		used to specify a range of chapters to download (e.g. mangodl -D "Martial Peak" -cr 1 99 will download chapters from 1 to 99 (included)
-	-o, --output			used to specify the file output of the pages (img or pdf), e.g. mangodl -D "Tokyo Revengers" -o pdf will create a pdf for every chapter. By default, it's images 
+	-o, --output			used to specify the file output of the pages (img, pdf or cbz), e.g. mangodl -D "Tokyo Revengers" -o pdf will create a pdf for every chapter. By default, it's images
 	-s, --special			used to download "special" chapters too, the ones with floating point values (13.1, 14.7, 99.3, etc). Makes the downloads slower, so use this only if needed
 	
 	For -S:
