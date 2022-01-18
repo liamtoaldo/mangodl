@@ -1,7 +1,7 @@
 package main
 
 import (
-	"mangodl/utils"
+	"mangodl-git/utils"
 )
 
 func main() {

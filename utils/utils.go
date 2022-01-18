@@ -5,8 +5,8 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"io/ioutil"
 	"log"
-	dl "mangodl/download"
-	outl "mangodl/output"
+	dl "mangodl-git/download"
+	outl "mangodl-git/output"
 	"math"
 	"net/http"
 	"os"
@@ -403,26 +403,25 @@ func prepareOutput(i float64) {
 		if output == "pdf" {
 			fmt.Println("Converting the downloaded images to PDF in", fmt.Sprintf("%s/Chapter%v.pdf", dir, chapterNumber))
 			outl.ConvertToPDF(pages, fmt.Sprintf("%s/Chapter%v.pdf", dir, chapterNumber))
+			//move the chapter one directory up.
+			err := os.Rename(fmt.Sprintf("%s/Chapter%v.pdf", dir, chapterNumber), fmt.Sprintf(strings.Replace(dir, fmt.Sprintf("Chapter %v", chapterNumber), "", 1))+fmt.Sprintf("Chapter%v.pdf", chapterNumber))
+			if err != nil {
+				log.Println(err)
+			}
 		} else if output == "cbz" {
 			fmt.Println("Converting the downloaded images to CBZ in", fmt.Sprintf("%s/Chapter%v.cbz", dir, chapterNumber))
 			outl.ConvertToCBZ(pages, fmt.Sprintf("%s/Chapter%v.cbz", dir, chapterNumber))
-		}
-		deleteImages(fmt.Sprintf(dir))
-	}
-}
-
-func deleteImages(path string) {
-	fmt.Println("Removing previously downloaded images of this chapter...")
-	files, _ := ioutil.ReadDir(path)
-	for _, file := range files {
-		if strings.Contains(file.Name(), "jpg") {
-			err := os.Remove(path + "/" + file.Name())
+			//move the chapter one directory up.
+			err := os.Rename(fmt.Sprintf("%s/Chapter%v.cbz", dir, chapterNumber), fmt.Sprintf(strings.Replace(dir, fmt.Sprintf("Chapter %v", chapterNumber), "", 1))+fmt.Sprintf("Chapter%v.cbz", chapterNumber))
 			if err != nil {
 				log.Println(err)
 			}
 		}
+		//delete the folder and images, (issue #21)
+		fmt.Println("Removing previously downloaded images...")
+		os.RemoveAll(dir)
+		fmt.Println("Done")
 	}
-	fmt.Println("Done")
 }
 
 //Execute is equivalent to a "main" since it does everything required to run and calls all other private functions
