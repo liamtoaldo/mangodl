@@ -132,7 +132,7 @@ Usage: mangodl [FLAGS]...
 
 Arguments and flags:
 
-	-h, --help			shows this message and exit
+    -h, --help			shows this message and exit
 
 	Needed (one of them):
 	-D, --download			downloads the manga specified after -D (e.g. mangodl -D jojo will search for 10 manga with that name and ask you which one to download)
@@ -144,11 +144,14 @@ Arguments and flags:
 	For -D:
 	-c, --chapter			used to specify the chapter to download (if omitted it will download them all)
 	-cr, --chapterrange		used to specify a range of chapters to download (e.g. mangodl -D "Martial Peak" -cr 1 99 will download chapters from 1 to 99 (included)
-	-o, --output			used to specify the file output of the pages (img, pdf or cbz), e.g. mangodl -D "Tokyo Revengers" -o pdf will create a pdf for every chapter. By default, it's images
+	-o, --output			used to specify the file output of the pages (img, pdf or cbz), e.g. mangodl -D "Tokyo Revengers" -o pdf will create a pdf for every chapter. By default, it's images.
+                                    Remember that this flag and any other flags must be used before the chapter selection flag, otherwise they wouldn't be detected
 	-s, --special			used to download "special" chapters too, the ones with floating point values (13.1, 14.7, 99.3, etc). Makes the downloads slower, so use this only if needed
+	-f, --first			used to skip the selection phase and select the first manga found. (e.g. mangodl -D "Chainsaw" -f)
 	
 	For -S:
 	-n, --noplot		do not print the plot of searched manga	
+
 <!-- ROADMAP -->
 
 ## Reading
