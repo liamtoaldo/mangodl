@@ -38,6 +38,8 @@ const (
 	OUTPUTFLAGALT       = "--output"
 	SPECIALFLAG         = "-s"
 	SPECIALFLAGALT      = "--special"
+	SELECTFIRSTFLAG     = "-f"
+	SELECTFIRSTFLAGALT  = "--first"
 )
 
 //the variables based on the user's results
@@ -59,6 +61,7 @@ var (
 	plotState     string  //no or yes
 	output        = "img" //img, pdf or cbz, default is image
 	special       = false
+	selectFirst   = false
 )
 
 type DownloadedManga struct {
@@ -84,8 +87,10 @@ Arguments and flags:
 	For -D:
 	-c, --chapter			used to specify the chapter to download (if omitted it will download them all)
 	-cr, --chapterrange		used to specify a range of chapters to download (e.g. mangodl -D "Martial Peak" -cr 1 99 will download chapters from 1 to 99 (included)
-	-o, --output			used to specify the file output of the pages (img, pdf or cbz), e.g. mangodl -D "Tokyo Revengers" -o pdf will create a pdf for every chapter. By default, it's images
+	-o, --output			used to specify the file output of the pages (img, pdf or cbz), e.g. mangodl -D "Tokyo Revengers" -o pdf will create a pdf for every chapter. By default, it's images.
+							Remember that this flag and any other flags must be used before the chapter selection flag, otherwise they wouldn't be detected
 	-s, --special			used to download "special" chapters too, the ones with floating point values (13.1, 14.7, 99.3, etc). Makes the downloads slower, so use this only if needed
+	-f, --first				used to skip the selection phase and select the first manga found. (e.g. mangodl -D "Chainsaw" -f)
 	
 	For -S:
 	-n, --noplot		do not print the plot of searched manga	
@@ -152,7 +157,10 @@ func checkArgs() {
 			chosenDirectory = os.Args[i+1]
 			break
 		}
-
+		//Skip selection (first)
+		if (s == SELECTFIRSTFLAG || s == SELECTFIRSTFLAGALT) && currentState == 'D' {
+			selectFirst = true
+		}
 		//chapters
 		if s == CHAPTERFLAG || s == CHAPTERFLAGALT {
 			if !isNextArg(i + 1) {
@@ -234,10 +242,18 @@ func search(howMany int) {
 				if strings.Contains(selection.Text(), "summary:") {
 					realMangaName = strings.Trim(strings.Replace(selection.Text(), " summary:", "", -1), " ")
 					foundMangaNames = append(foundMangaNames, realMangaName)
+					//If the skip flag is selected, skip other manga. I placed this code just after the first manga selection.
+					if selectFirst {
+						return
+					}
 					fmt.Println("["+fmt.Sprint(counter)+"] -", realMangaName)
 					counter++
 				}
 			})
+			//If the skip flag is selected, skip other manga and just download the first possible.
+			if selectFirst {
+				return false
+			}
 			//added wait option because the host has become slow, and requests to it need to be slow as well
 			time.Sleep(300 * time.Millisecond)
 			//plot
@@ -260,40 +276,46 @@ func search(howMany int) {
 
 //the function to let the user choose the manga
 func chooseManga() {
-	fmt.Println("Which Manga do you want to download?")
-	var inputChoice int
-	fmt.Scan(&inputChoice)
-	switch inputChoice {
-	case 1:
+	//If the select first flag is true, skip the manga selection and take the first manga.
+	if selectFirst {
 		selectedMangaID = foundMangaIDs[0]
 		realMangaName = foundMangaNames[0]
-	case 2:
-		selectedMangaID = foundMangaIDs[1]
-		realMangaName = foundMangaNames[1]
-	case 3:
-		selectedMangaID = foundMangaIDs[2]
-		realMangaName = foundMangaNames[2]
-	case 4:
-		selectedMangaID = foundMangaIDs[3]
-		realMangaName = foundMangaNames[3]
-	case 5:
-		selectedMangaID = foundMangaIDs[4]
-		realMangaName = foundMangaNames[4]
-	case 6:
-		selectedMangaID = foundMangaIDs[5]
-		realMangaName = foundMangaNames[5]
-	case 7:
-		selectedMangaID = foundMangaIDs[6]
-		realMangaName = foundMangaNames[6]
-	case 8:
-		selectedMangaID = foundMangaIDs[7]
-		realMangaName = foundMangaNames[7]
-	case 9:
-		selectedMangaID = foundMangaIDs[8]
-		realMangaName = foundMangaNames[8]
-	case 10:
-		selectedMangaID = foundMangaIDs[9]
-		realMangaName = foundMangaNames[9]
+	} else {
+		fmt.Println("Which Manga do you want to download?")
+		var inputChoice int
+		fmt.Scan(&inputChoice)
+		switch inputChoice {
+		case 1:
+			selectedMangaID = foundMangaIDs[0]
+			realMangaName = foundMangaNames[0]
+		case 2:
+			selectedMangaID = foundMangaIDs[1]
+			realMangaName = foundMangaNames[1]
+		case 3:
+			selectedMangaID = foundMangaIDs[2]
+			realMangaName = foundMangaNames[2]
+		case 4:
+			selectedMangaID = foundMangaIDs[3]
+			realMangaName = foundMangaNames[3]
+		case 5:
+			selectedMangaID = foundMangaIDs[4]
+			realMangaName = foundMangaNames[4]
+		case 6:
+			selectedMangaID = foundMangaIDs[5]
+			realMangaName = foundMangaNames[5]
+		case 7:
+			selectedMangaID = foundMangaIDs[6]
+			realMangaName = foundMangaNames[6]
+		case 8:
+			selectedMangaID = foundMangaIDs[7]
+			realMangaName = foundMangaNames[7]
+		case 9:
+			selectedMangaID = foundMangaIDs[8]
+			realMangaName = foundMangaNames[8]
+		case 10:
+			selectedMangaID = foundMangaIDs[9]
+			realMangaName = foundMangaNames[9]
+		}
 	}
 	if output != "img" {
 		fmt.Println("Downloading images to be converted...")
