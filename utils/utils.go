@@ -40,6 +40,8 @@ const (
 	SPECIALFLAGALT      = "--special"
 	SELECTFIRSTFLAG     = "-f"
 	SELECTFIRSTFLAGALT  = "--first"
+	VERSIONFLAG         = "-v"
+	VERSIONFLAGALT      = "--version"
 )
 
 //the variables based on the user's results
@@ -47,7 +49,7 @@ var (
 	mangaName       string
 	selectedMangaID string
 	realMangaName   string
-	currentState    byte //D for downloading, S for searching, Q for querying, H for help, E for error, F for directory/folder
+	currentState    byte //D for downloading, S for searching, Q for querying, H for help, E for error, F for directory/folder, V for version
 	foundMangaIDs   []string
 	foundMangaNames []string
 	chosenDirectory string
@@ -62,6 +64,8 @@ var (
 	output        = "img" //img, pdf or cbz, default is image
 	special       = false
 	selectFirst   = false
+	//TODO always change this value when the version is updated
+	version = 1.6
 )
 
 type DownloadedManga struct {
@@ -82,6 +86,7 @@ Arguments and flags:
 	-S, --search			searches for the manga specified after this flag (e.g. mangodl -S "kanojo x kanojo" will search and display the manga found with that name)
 	-Q, --query			show downloaded manga
 	-Dir, --directory		sets the default directory to download manga (e.g. mangodl -Dir "$HOME/Documents/manga/"), otherwise the default one would be "$HOME/Downloaded Manga/" and the Desktop for Windows
+	-v, --version			prints the version number (this was implemented from v1.6)
 	
 	Optional:
 	For -D:
@@ -95,6 +100,10 @@ Arguments and flags:
 	For -S:
 	-n, --noplot		do not print the plot of searched manga	
 	`)
+}
+
+func showVersion() {
+	fmt.Printf("mangodl v%v", version)
 }
 
 func isNextArg(index int) bool {
@@ -156,6 +165,10 @@ func checkArgs() {
 			currentState = 'F'
 			chosenDirectory = os.Args[i+1]
 			break
+		}
+		//Version
+		if s == VERSIONFLAG || s == VERSIONFLAGALT {
+			currentState = 'V'
 		}
 		//Skip selection (first)
 		if (s == SELECTFIRSTFLAG || s == SELECTFIRSTFLAGALT) && currentState == 'D' {
@@ -573,6 +586,8 @@ func Execute() {
 		search(10)
 	} else if currentState == 'H' {
 		showHelp()
+	} else if currentState == 'V' {
+		showVersion()
 	} else if currentState == 'E' {
 		return
 	} else {

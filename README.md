@@ -139,6 +139,7 @@ Arguments and flags:
 	-S, --search			searches for the manga specified after this flag (e.g. mangodl -S "kanojo x kanojo" will search and display the manga found with that name)
 	-Q, --query			show downloaded manga
 	-Dir, --directory		sets the default directory to download manga (e.g. mangodl -Dir "$HOME/Documents/manga/"), otherwise the default one would be "$HOME/Downloaded Manga/" and the Desktop for Windows
+	-v, --version			prints the version number (this was implemented from v1.6)
 	
 	Optional:
 	For -D:
