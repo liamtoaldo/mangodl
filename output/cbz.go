@@ -14,7 +14,7 @@ type ComicInfo struct  {
 	Series string `xml:"Series"`
 }
 
-func ConvertToCBZ(inputImages []string, outputCBZ string) {
+func ConvertToCBZ(inputImages []string, outputCBZ string, metaData ComicInfo) {
 	cbz, err := os.Create(outputCBZ)
 	if err != nil {
 		log.Println(err)
