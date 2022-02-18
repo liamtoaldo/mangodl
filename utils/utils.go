@@ -49,7 +49,7 @@ var (
 	mangaName       string
 	selectedMangaID string
 	realMangaName   string
-	currentState    byte //D for downloading, S for searching, Q for querying, H for help, E for error, F for directory/folder, V for version
+	currentState    byte //D for downloading, S for searching, Q for querying, H for help, E for error, F for directory/folder, V for version, O for changing output in config
 	foundMangaIDs   []string
 	foundMangaNames []string
 	chosenDirectory string
@@ -60,12 +60,12 @@ var (
 	singleChapter string
 	chapterBegin  string
 	chapterEnd    string
-	plotState     string  //no or yes
-	output        = "img" //img, pdf or cbz, default is image
+	plotState     string              //no or yes
+	output        = ReadJSON().Output //img, pdf or cbz, default is image
 	special       = false
 	selectFirst   = false
 	//TODO always change this value when the version is updated
-	version = 1.6
+	version = 1.
 )
 
 type DownloadedManga struct {
@@ -93,6 +93,7 @@ Arguments and flags:
 	-c, --chapter			used to specify the chapter to download (if omitted it will download them all)
 	-cr, --chapterrange		used to specify a range of chapters to download (e.g. mangodl -D "Martial Peak" -cr 1 99 will download chapters from 1 to 99 (included)
 	-o, --output			used to specify the file output of the pages (img, pdf or cbz), e.g. mangodl -D "Tokyo Revengers" -o pdf will create a pdf for every chapter. By default, it's images.
+					This will also change the default output file format in the config.
 					Remember that this flag and any other flags must be used before the chapter selection flag, otherwise they wouldn't be detected
 	-s, --special			used to download "special" chapters too, the ones with floating point values (13.1, 14.7, 99.3, etc). Makes the downloads slower, so use this only if needed
 	-f, --first			used to skip the selection phase and select the first manga found. (e.g. mangodl -D "Chainsaw" -f)
@@ -213,6 +214,7 @@ func checkArgs() {
 				return
 			}
 			output = os.Args[i+1]
+			WriteJson(ReadJSON().Directory, output)
 		}
 		//special chapters
 		if s == SPECIALFLAG || s == SPECIALFLAGALT {
@@ -353,7 +355,7 @@ func download(chapter float32) bool {
 	if strings.Contains(realMangaName, ":") && runtime.GOOS == "windows" {
 		realMangaName = strings.ReplaceAll(realMangaName, ":", " -")
 	}
-	dir := ReadJSON() + realMangaName + "/Chapter " + fmt.Sprint(chapterNumber)
+	dir := ReadJSON().Directory + realMangaName + "/Chapter " + fmt.Sprint(chapterNumber)
 	err = os.MkdirAll(dir, 0777)
 	if err != nil {
 		log.Println(err)
@@ -385,7 +387,7 @@ func download(chapter float32) bool {
 //the function used for --query (shows the downloaded manga)
 func showDownloaded() {
 	var downloaded []DownloadedManga
-	dir := ReadJSON()
+	dir := ReadJSON().Directory
 	files, err := ioutil.ReadDir(dir)
 
 	if err != nil {
@@ -410,7 +412,7 @@ func showDownloaded() {
 					downloaded[len(downloaded)-1].chapters = append(downloaded[len(downloaded)-1].chapters, math.Ceil(tmp*100)/100) //rounding the number to the first decimal digit because some chapters have decimals
 				}
 			}
-			dir = ReadJSON()
+			dir = ReadJSON().Directory
 		}
 	}
 	for _, m := range downloaded {
@@ -429,7 +431,7 @@ func prepareOutput(i float64) {
 		} else {
 			chapterNumber = strconv.FormatFloat(i, 'f', -1, 64)
 		}
-		dir := ReadJSON() + realMangaName + "/Chapter " + chapterNumber
+		dir := ReadJSON().Directory + realMangaName + "/Chapter " + chapterNumber
 		pageNumber := outl.GetNumberOfPages(dir)
 		var pages []string
 		for j := 1; j <= pageNumber; j++ {
@@ -461,11 +463,10 @@ func prepareOutput(i float64) {
 
 //Execute is equivalent to a "main" since it does everything required to run and calls all other private functions
 func Execute() {
-	//put the default config file, which, for now, contains only the directory
-	defaultJson()
+	//Read Output from config
 	//Check if arguments are inputted correctly and change "states"
 	checkArgs()
-
+	//Put default output
 	if currentState == 'D' {
 
 		plotState = "no"
@@ -581,7 +582,8 @@ func Execute() {
 	} else if currentState == 'Q' {
 		showDownloaded()
 	} else if currentState == 'F' {
-		WriteJson(chosenDirectory)
+		WriteJson(chosenDirectory, ReadJSON().Output)
+		fmt.Println("Set default directory to", ReadJSON().Directory)
 	} else if currentState == 'S' {
 		search(10)
 	} else if currentState == 'H' {

@@ -2,7 +2,6 @@ package utils
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -14,6 +13,7 @@ var configFile = home + "/.config/mangodl.conf"
 
 type Config struct {
 	Directory string `json:"directory"`
+	Output    string `json:"output"`
 }
 
 func check() {
@@ -23,30 +23,38 @@ func check() {
 	_, err := os.Stat(configFile)
 	if os.IsNotExist(err) {
 		os.Create(configFile)
+		defaultJson()
 	}
 }
-func ReadJSON() string {
+func ReadJSON() Config {
 	check()
 	var config Config
 	configData, _ := ioutil.ReadFile(configFile)
 	json.Unmarshal(configData, &config)
-	return config.Directory
+	return config
 }
-func WriteJson(data string) {
+func WriteJson(dir string, out string) {
 	check()
 	//check if the user has put an '/' which is required, otherwise add it to the string
-	if data[len(data)-1] != '/' {
-		data += "/"
+	if dir[len(dir)-1] != '/' {
+		dir += "/"
 	}
 	_, err := ioutil.ReadFile(configFile)
 	var config Config
-	config.Directory = data
+	config.Directory = dir
+	//check if output is one of the available output files, otherwise, put the default (img)
+	//TODO if a new one is added, update this:
+	if out != "pdf" && out != "cbz" {
+		config.Output = "img"
+	} else {
+		config.Output = out
+	}
+
 	newData, _ := json.MarshalIndent(config, "", "	")
 	err = ioutil.WriteFile(configFile, newData, 0777)
 	if err != nil {
 		log.Println(err)
 	}
-	fmt.Println("Set default directory to", config.Directory)
 }
 func defaultJson() {
 	check()
@@ -62,6 +70,7 @@ func defaultJson() {
 	} else {
 		config.Directory = home + "/Downloaded Manga/"
 	}
+	config.Output = "img"
 	//write to the config struct and then write the struct to the file
 	newData, _ := json.MarshalIndent(config, "", "	")
 	err = ioutil.WriteFile(configFile, newData, 0777)
