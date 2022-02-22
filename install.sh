@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## UNCOMMENT THIS LINES IF YOU WANT TO BUILD FROM SOURCE
+## UNCOMMENT THESE LINES IF YOU WANT TO BUILD FROM SOURCE
 #echo Removing pre-built binary
 #rm mangodl
 #echo Installing the needed dependencies
