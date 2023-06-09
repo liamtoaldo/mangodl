@@ -189,7 +189,7 @@ Distributed under the GPL 3.0 License. See `LICENSE` for more information.
 
 ## Contact
 
-Me - [gyroo@tuta.io](mailto:gyroo@tuta.io)
+Me - [liamtoaldo+gh@gmail.com](mailto:liamtoaldo+gh@gmail.com)
 
 Project Link: [https://github.com/liamtoaldo/mangodl](https://github.com/liamtoaldo/mangodl)
 
