@@ -7,7 +7,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <a href="https://github.com/Gyro7/">
+  <a href="https://github.com/liamtoaldo/">
     <img src="assets/logo.png" alt="Logo" width="200">
   </a>
 </p>
@@ -17,8 +17,8 @@
 Download and search manga right from the terminal!
     <br />
     <br />
-    <a href="https://github.com/Gyro7/mangodl/issues">Report Bug</a> || 
-    <a href="https://github.com/Gyro7/mangodl/pulls">Request Feature</a>
+    <a href="https://github.com/liamtoaldo/mangodl/issues">Report Bug</a> || 
+    <a href="https://github.com/liamtoaldo/mangodl/pulls">Request Feature</a>
   </p>
 
 <!-- TABLE OF CONTENTS -->
@@ -73,7 +73,7 @@ To get a local copy up and running follow these simple steps.
 ### Installation
 
 #### Linux
-Download the files _mangodl_ and _install.sh_ from the latest Linux version in the [Releases](https://github.com/Gyro7/mangodl/releases)
+Download the files _mangodl_ and _install.sh_ from the latest Linux version in the [Releases](https://github.com/liamtoaldo/mangodl/releases)
 ```sh
 # run the installation script
 chmod +x install.sh
@@ -83,7 +83,7 @@ chmod +x install.sh
 #### Linux (build from source)
 ```sh
 # clone and go into the repository
-git clone https://github.com/Gyro7/mangodl.git
+git clone https://github.com/liamtoaldo/mangodl.git
 cd mangodl
 
 # NOW JUST OPEN THE INSTALL.SH SCRIPT AND UNCOMMENT THE COMMENTED LINES
@@ -96,7 +96,7 @@ An AUR package is now available.
 
 Just `yay -S mangodl` or, if you use paru `paru -S mangodl`
 #### Windows
-Download the executable (mangodl.exe) from the latest Windows version in the [Releases](https://github.com/Gyro7/mangodl/releases)  
+Download the executable (mangodl.exe) from the latest Windows version in the [Releases](https://github.com/liamtoaldo/mangodl/releases)  
 If you just want to use it without installing it, just run mangodl.exe everytime and skip these steps below
 ```sh
 Open start menu,
@@ -114,12 +114,12 @@ Open start menu,
 If you haven't already given the terminal access to the disk, then do it, for further help see <b>[THIS](https://osxdaily.com/2018/10/09/fix-operation-not-permitted-terminal-error-macos/) </b>  
 Installing via brew (assuming that `/usr/local/bin` is already in the $PATH variable):
 ```bash
-brew tap Gyro7/mangodl
+brew tap liamtoaldo/mangodl
 brew install --build-from-source mangodl
 ```
 
 #### macOS (alternative)
-Download the executable mangodl-darwin from the latest macOS version in the [Releases](https://github.com/Gyro7/mangodl/releases)
+Download the executable mangodl-darwin from the latest macOS version in the [Releases](https://github.com/liamtoaldo/mangodl/releases)
 ```sh
 # rename the executable
 mv mangodl-darwin mangodl
@@ -165,7 +165,7 @@ You can simply add the folder "Downloaded Manga" to OpenComic, which is the most
 And then it'll open all your manga, divided into chapters.
 ## Roadmap
 
-See the [open issues](https://github.com/Gyro7/mangodl/issues) for a list of proposed features (and known issues).
+See the [open issues](https://github.com/liamtoaldo/mangodl/issues) for a list of proposed features (and known issues).
 
 <!-- CONTRIBUTING -->
 
@@ -191,25 +191,25 @@ Distributed under the GPL 3.0 License. See `LICENSE` for more information.
 
 Me - [gyroo@tuta.io](mailto:gyroo@tuta.io)
 
-Project Link: [https://github.com/Gyro7/mangodl](https://github.com/Gyro7/gofetch)
+Project Link: [https://github.com/liamtoaldo/mangodl](https://github.com/liamtoaldo/gofetch)
 
 <!-- ACKNOWLEDGEMENTS -->
 
 ## Acknowledgements
 
--   [Myself for doing everything.](https://github.com/Gyro7)
+-   [Myself for doing everything.](https://github.com/liamtoaldo)
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
-[contributors-shield]: https://img.shields.io/github/contributors/Gyro7/mangodl.svg?style=flat-square
-[contributors-url]: https://github.com/Gyro7/mangodl/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/Gyro7/mangodl.svg?style=flat-square
-[forks-url]: https://github.com/Gyro7/mangodl/network/members
-[stars-shield]: https://img.shields.io/github/stars/Gyro7/mangodl.svg?style=flat-square
-[stars-url]: https://github.com/Gyro7/mangodl/stargazers
-[issues-shield]: https://img.shields.io/github/issues/Gyro7/mangodl.svg?style=flat-square
-[issues-url]: https://github.com/Gyro7/mangodl/issues
-[license-shield]: https://img.shields.io/github/license/Gyro7/mangodl.svg?style=flat-square
-[license-url]: https://github.com/Gyro7/mangodl/blob/main/LICENSE
+[contributors-shield]: https://img.shields.io/github/contributors/liamtoaldo/mangodl.svg?style=flat-square
+[contributors-url]: https://github.com/liamtoaldo/mangodl/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/liamtoaldo/mangodl.svg?style=flat-square
+[forks-url]: https://github.com/liamtoaldo/mangodl/network/members
+[stars-shield]: https://img.shields.io/github/stars/liamtoaldo/mangodl.svg?style=flat-square
+[stars-url]: https://github.com/liamtoaldo/mangodl/stargazers
+[issues-shield]: https://img.shields.io/github/issues/liamtoaldo/mangodl.svg?style=flat-square
+[issues-url]: https://github.com/liamtoaldo/mangodl/issues
+[license-shield]: https://img.shields.io/github/license/liamtoaldo/mangodl.svg?style=flat-square
+[license-url]: https://github.com/liamtoaldo/mangodl/blob/main/LICENSE
 
