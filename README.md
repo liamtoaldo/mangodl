@@ -191,7 +191,7 @@ Distributed under the GPL 3.0 License. See `LICENSE` for more information.
 
 Me - [gyroo@tuta.io](mailto:gyroo@tuta.io)
 
-Project Link: [https://github.com/liamtoaldo/mangodl](https://github.com/liamtoaldo/gofetch)
+Project Link: [https://github.com/liamtoaldo/mangodl](https://github.com/liamtoaldo/mangodl)
 
 <!-- ACKNOWLEDGEMENTS -->
 
